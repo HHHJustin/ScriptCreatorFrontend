@@ -1,5 +1,5 @@
 import { Handle, Position } from 'reactflow';
-import MessageNode from './message';
+import ContentRenderer from './contentRenderer';
 import styled from 'styled-components';
 import { useState } from 'react';
 
@@ -18,12 +18,20 @@ const NodeWrapper = styled.div`
         switch(props.type) {
             case '訊息':
                 return '#f4faff';
+            case '關鍵字判定':
+                return '#fff3e0';
+            case '快速回覆':
+                return '#ffebee'
         }
     }};
     border: 2px solid ${(props) => {
             switch(props.type){
                 case '訊息':
                     return '#90caf9';
+                case '關鍵字判定':
+                    return '#ffb74d';
+                case '快速回覆':
+                    return '#ef5350'
         }
     }};
     border-radius: 5px 5px 0 0;
@@ -38,17 +46,42 @@ const NodeWrapper = styled.div`
 // 標題樣式
 const Title = styled.div`
     width: 100%;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    color: #1565c0;
+    color: ${(props) => {
+        switch(props.type) {
+            case '訊息':
+                return '#1565c0;';
+            case '關鍵字判定':
+                return '#ef6c00';
+            case '快速回覆':
+                return '#c62828';
+            default:
+                return '#000000';
+        }
+    }};
     margin-bottom: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 `;
 
 // 類型標籤樣式
 const TypeBadge = styled.div`
     font-size: 12px;
-    color: #555;
-    background-color: #e3f2fd;
+    color: #555555;
+    background-color: ${(props) => {
+        switch(props.type) {
+            case '訊息':
+                return '#e3f2fd';
+            case '關鍵字判定':
+                return '#ffe0b2';
+            case '快速回覆':
+                return '#ffcdd2'
+            default:
+                return '#eeeeee';
+        }
+    }};
     border-radius: 6px;
     padding: 4px 8px;
     display: inline-block;
@@ -59,8 +92,14 @@ const TriangleButton = styled.button`
     height: 20px;
     border: 2px solid ${(props) => {
     switch(props.type){
-        case '訊息': return '#489af9';
-        default: return '#ccc';
+        case '訊息': 
+            return '#489af9';
+        case '關鍵字判定':
+            return '#ffa726';
+        case '快速回覆':
+            return '#e53935'
+        default: 
+            return '#ccc';
     }
     }};
     background: white;
@@ -81,8 +120,9 @@ function IndexNode({ data, id }) {
         }
         setIsOpen(!isOpen);
     };
+    const hiddenTypes = ['關鍵字判定']
   
-  return (
+    return (
     <Wrapper>
         <NodeWrapper type={data.type}>
             {/* 左側進線點 */}
@@ -98,11 +138,11 @@ function IndexNode({ data, id }) {
             }}
             />
 
-            <Title>
+            <Title type={data.type}>
                 {data.title || '未命名節點'}
             </Title>
 
-            <TypeBadge>
+            <TypeBadge type={data.type}>
                 {data.type || '未知類型'}
             </TypeBadge>
             
@@ -116,10 +156,13 @@ function IndexNode({ data, id }) {
                 height: 8,
                 borderRadius: '50%',
                 right: -6,
+                visibility: hiddenTypes.includes(data.type) ? 'hidden' : 'visible', 
                 }}
             />
         </NodeWrapper>
-        {messages && <MessageNode messages={messages}/>}
+        {messages && (
+            <ContentRenderer type={data.type} messages={messages} />
+)}
 
         <TriangleButton onClick={handleTriangleClick} type={data.type}>
             {isOpen ? '▲' : '▼'}

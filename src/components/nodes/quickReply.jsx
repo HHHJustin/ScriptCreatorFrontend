@@ -12,7 +12,7 @@ const MessagePanel = styled.div`
   .title {
     font-weight: bold;
     font-size: 12px;
-    color: #1565c0;
+    color: #c62828;
     margin-bottom: 4px;
     overflow: hidden;
     white-space: nowrap;
@@ -30,19 +30,19 @@ const MessagePanel = styled.div`
 `;
 
 
-function MessageNode({ messages }) {
+function QuickReplyNode({ messages }) {
   if (!messages || messages.length === 0) return null;
 
   return (
     <>
       {messages.map((msg, index) => (
         <MessagePanel key={index}>
-          <div className="title">{msg.title}</div>
-          <div className="content">{msg.content}</div>
+          <div className="title">{msg.button}</div>
+          <div className="content">{msg.reply}</div>
         </MessagePanel>
       ))}
     </>
   );
 }
 
-export default MessageNode;
+export default QuickReplyNode;
