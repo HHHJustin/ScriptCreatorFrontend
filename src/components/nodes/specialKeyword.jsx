@@ -21,7 +21,7 @@ const Panel = styled.div`
   }
 `;
 
-function KeywordDecisionNode({ messages }) {
+function SpecialKeywordDecisionNode({ messages }) {
   if (!messages || messages.length === 0) return null;
 
   return (
@@ -50,4 +50,4 @@ function KeywordDecisionNode({ messages }) {
   );
 }
 
-export default KeywordDecisionNode;
+export default SpecialKeywordDecisionNode;

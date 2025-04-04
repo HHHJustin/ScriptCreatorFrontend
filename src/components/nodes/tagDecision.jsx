@@ -9,7 +9,7 @@ const Panel = styled.div`
   padding: 16px 12px;
   border-bottom: 1px solid #ddd;
 
-  .text {
+  .title {
     font-weight: bold;
     font-size: 12px;
     color: #444444;;
@@ -17,18 +17,27 @@ const Panel = styled.div`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    text-align: center;
+  }
+
+  .text {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 `;
 
-function KeywordDecisionNode({ messages }) {
+function TagDecisionNode({ messages }) {
   if (!messages || messages.length === 0) return null;
 
   return (
     <Container>
       {messages.map((msg) => (
         <Panel key={msg.id}>
-            <div className="text">{msg.keyword}</div>
+            <div className="title">{msg.title}</div>
+            <div className="text">{msg.tags}</div>
           <Handle
             type="source"
             id={msg.id}
@@ -38,7 +47,7 @@ function KeywordDecisionNode({ messages }) {
               top: '50%',
               right: -6,
               transform: 'translateY(-50%)',
-              background: '#ef6c00',
+              background: '#64b5f6',
               width: 8,
               height: 8,
               borderRadius: '50%',
@@ -50,4 +59,4 @@ function KeywordDecisionNode({ messages }) {
   );
 }
 
-export default KeywordDecisionNode;
+export default TagDecisionNode;

@@ -30,19 +30,19 @@ const Panel = styled.div`
 `;
 
 
-function MessageNode({ messages }) {
+function TagOperationNode({ messages }) {
   if (!messages || messages.length === 0) return null;
 
   return (
     <>
       {messages.map((msg, index) => (
         <Panel key={index}>
-          <div className="title">{msg.title}</div>
-          <div className="content">{msg.content}</div>
+          <div className="title">{msg.tag}</div>
+          <div className="content">{msg.operation}</div>
         </Panel>
       ))}
     </>
   );
 }
 
-export default MessageNode;
+export default TagOperationNode;

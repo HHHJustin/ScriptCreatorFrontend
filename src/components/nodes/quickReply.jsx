@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const MessagePanel = styled.div`
+const Panel = styled.div`
   width: 100%;
   background: #ffffff;
   padding: 16px 12px;
@@ -12,7 +12,7 @@ const MessagePanel = styled.div`
   .title {
     font-weight: bold;
     font-size: 12px;
-    color: #c62828;
+    color: #444444;
     margin-bottom: 4px;
     overflow: hidden;
     white-space: nowrap;
@@ -36,10 +36,10 @@ function QuickReplyNode({ messages }) {
   return (
     <>
       {messages.map((msg, index) => (
-        <MessagePanel key={index}>
+        <Panel key={index}>
           <div className="title">{msg.button}</div>
           <div className="content">{msg.reply}</div>
-        </MessagePanel>
+        </Panel>
       ))}
     </>
   );

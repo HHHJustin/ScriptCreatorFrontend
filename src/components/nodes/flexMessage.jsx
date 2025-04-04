@@ -9,7 +9,7 @@ const Panel = styled.div`
     border-bottom: 1px solid #ddd;
   }
 
-  .title {
+  .message {
     font-weight: bold;
     font-size: 12px;
     color: #444444;
@@ -17,32 +17,23 @@ const Panel = styled.div`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-  }
-
-  .content {
-    font-size: 13px;
-    color: #666666;
-    line-height: 1.5;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    text-align: center;
   }
 `;
 
 
-function MessageNode({ messages }) {
+function FlexMessageNode({ messages }) {
   if (!messages || messages.length === 0) return null;
 
   return (
     <>
       {messages.map((msg, index) => (
         <Panel key={index}>
-          <div className="title">{msg.title}</div>
-          <div className="content">{msg.content}</div>
+          <div className="message">{msg.message}</div>
         </Panel>
       ))}
     </>
   );
 }
 
-export default MessageNode;
+export default FlexMessageNode;
