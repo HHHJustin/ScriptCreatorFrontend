@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import ReactFlow, { Background, useNodesState } from 'reactflow';
 import 'reactflow/dist/style.css';
-import IndexNode from './components/nodes';
+import IndexNode from './components/nodes/indexNode';
+import { useCallback } from 'react';
 
 const nodeTypes = {
   indexNode: IndexNode,
 };
 
-// ✅ 資料搬出來
 const initialData = {
   message: [
     { id: '1', title: '文字', content: '你不是真正的快樂。' },
@@ -55,7 +55,6 @@ const initialData = {
   ],
 };
 
-// ✅ Node 設定也搬出來
 const nodeConfig = [
   { id: '1', title: '訊息節點', type: '訊息', position: { x: 100, y: 100 }, key: 'message' },
   { id: '2', title: '關鍵字節點', type: '關鍵字判定', position: { x: 300, y: 100 }, key: 'keyword' },
@@ -85,21 +84,25 @@ const createNodes = (data) => {
 
 const App = () => {
   const [data, setData] = useState(initialData);
-
-  // ✅ 用 useNodesState 才能動態 setNodes
   const [nodes, setNodes, onNodesChange] = useNodesState(createNodes(data));
   const [edges, setEdges] = useState([]);
 
+  // 拖曳結束後 (放開滑鼠)
+  const handleNodeDragStop = useCallback((event, node) => {
+    console.log(`節點 ${node.id} 最後位置：`, node.position);
+  }, []);
   return (
     <ReactFlow
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
+      onNodeDragStop={handleNodeDragStop} 
       nodeTypes={nodeTypes}
       snapToGrid
       snapGrid={[20, 20]}
     >
-      <Background color="#ddd" gap={20} size={3} />
+      <Background color="#ddd" gap={20} size={1} variant="lines"
+/>
     </ReactFlow>
   );
 };
