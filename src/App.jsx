@@ -3,6 +3,7 @@ import ReactFlow, { Background, useNodesState } from 'reactflow';
 import 'reactflow/dist/style.css';
 import IndexNode from './components/nodes/indexNode';
 import { useCallback } from 'react';
+import Navbar from './components/header/navbar';
 
 const nodeTypes = {
   indexNode: IndexNode,
@@ -86,24 +87,30 @@ const App = () => {
   const [data, setData] = useState(initialData);
   const [nodes, setNodes, onNodesChange] = useNodesState(createNodes(data));
   const [edges, setEdges] = useState([]);
+  const [barMenuOpen, setBarMenuOpen] = useState(false);
 
-  // 拖曳結束後 (放開滑鼠)
-  const handleNodeDragStop = useCallback((event, node) => {
-    console.log(`節點 ${node.id} 最後位置：`, node.position);
-  }, []);
+  // // 拖曳結束後 (放開滑鼠)
+  // const handleNodeDragStop = useCallback((event, node) => {
+  //   console.log(`節點 ${node.id} 最後位置：`, node.position);
+  // }, []);
   return (
+    <>
+    <Navbar barMenuOpen={barMenuOpen} setBarMenuOpen={setBarMenuOpen} />
     <ReactFlow
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
-      onNodeDragStop={handleNodeDragStop} 
+      // onNodeDragStop={handleNodeDragStop} 
       nodeTypes={nodeTypes}
       snapToGrid
       snapGrid={[20, 20]}
+      onPaneClick={() => {
+        setBarMenuOpen(false); 
+      }}
     >
-      <Background color="#ddd" gap={20} size={1} variant="lines"
-/>
+      <Background color="#ddd" gap={20} size={1} variant="lines"/>
     </ReactFlow>
+    </>
   );
 };
 

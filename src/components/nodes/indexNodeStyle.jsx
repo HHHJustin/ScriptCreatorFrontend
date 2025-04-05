@@ -68,7 +68,6 @@ export const ContextMenu = styled.div`
   z-index: 2000;
 `;
 
-// 單一選單項目
 export const MenuItem = styled.div`
   position: relative;  /* 為了讓子選單以自己為基準定位 */
   padding: 8px 16px;
@@ -76,8 +75,9 @@ export const MenuItem = styled.div`
   color: #333;
   cursor: pointer;
   white-space: nowrap;
-  display: flex;         /* 🔥 用 flex 排版 */
-  justify-content: space-between; /* 🔥 左右兩邊 */
+  display: flex;        
+  justify-content: space-between; 
+  font-weight: bold;
 
   &:hover {
     background-color: #f0f0f0;
@@ -88,7 +88,6 @@ export const MenuItem = styled.div`
   }
 `;
 
-// 子選單外層
 export const SubMenu = styled.div`
   display: none;
   position: absolute;
@@ -104,14 +103,13 @@ export const SubMenu = styled.div`
   z-index: 2000;
 `;
 
-// 子選單內的選項
 export const SubMenuItem = styled.div`
   padding: 8px 16px;
   font-size: 14px;
   color: #333;
   cursor: pointer;
   white-space: nowrap;
-
+  font-weight: bold;
   &:hover {
     background-color: #f0f0f0;
   }

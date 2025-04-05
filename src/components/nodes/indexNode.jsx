@@ -2,7 +2,7 @@ import { Handle, Position } from 'reactflow';
 import ContentRenderer from './contentRenderer';
 import { Wrapper, NodeWrapper, Title, TypeBadge, TriangleButton, ContentWrapper, ContextMenu, MenuItem, SubMenu, SubMenuItem } from './indexNodeStyle';
 import { useNodeActions } from './hooks/index';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 const options = {
@@ -23,6 +23,7 @@ function IndexNode({ data, id }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const hiddenTypes = ['關鍵字判定', '標籤判定', '隨機'];
+  const menuRef = useRef(null); 
 
   const handleContextMenu = (e) => {
     e.preventDefault();
@@ -46,9 +47,22 @@ function IndexNode({ data, id }) {
     setMenuVisible(false);
   };
 
-  const handleCloseMenu = () => {
-    setMenuVisible(false);
-  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(false);
+      }
+    };
+
+    if (menuVisible) {
+      document.addEventListener('click', handleClickOutside);
+    } else {
+      document.removeEventListener('click', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [menuVisible]);
 
   return (
     <>
@@ -86,7 +100,7 @@ function IndexNode({ data, id }) {
 
       {menuVisible &&
         createPortal(
-          <ContextMenu $x={menuPosition.x} $y={menuPosition.y} onMouseLeave={handleCloseMenu}>
+          <ContextMenu ref={menuRef} $x={menuPosition.x} $y={menuPosition.y}>
             <MenuItem>
             <span>新增下一個點</span>    
             <span>▶︎</span>      
