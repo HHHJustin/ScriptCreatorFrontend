@@ -30,3 +30,13 @@ button {
   background-color: #ccc;
   border-radius: 3px;
 }
+
+.react-flow__pane {
+  cursor: default !important;
+}
+
+@keyframes dashmove {
+  to {
+    stroke-dashoffset: -10;
+  }
+}

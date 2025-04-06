@@ -1,12 +1,18 @@
-import React, { useMemo, useState } from 'react';
-import ReactFlow, { Background, useNodesState } from 'reactflow';
+import React, { useState } from 'react';
+import { useNodesState, addEdge } from 'reactflow';
 import 'reactflow/dist/style.css';
 import IndexNode from './components/nodes/indexNode';
 import { useCallback } from 'react';
 import Navbar from './components/header/navbar';
+import Panel from './components/Panel/Panel';
+import CustomEdge from './components/edge/edge';
 
 const nodeTypes = {
   indexNode: IndexNode,
+};
+
+const edgeTypes = {
+  customEdge: CustomEdge,
 };
 
 const initialData = {
@@ -56,6 +62,13 @@ const initialData = {
   ],
 };
 
+const initialEdges = [
+  { id: 'e1-2', source: '1', target: '2', type: 'customEdge' },
+  { id: 'e-keyword3-to-node3', source: '2', target: '3', sourceHandle: 'keyword-3',  type: 'customEdge' },
+  { id: 'e-keyword2-to-node4', source: '2', target: '4', sourceHandle: 'keyword-4',  type: 'customEdge' },
+];
+
+
 const nodeConfig = [
   { id: '1', title: '訊息節點', type: '訊息', position: { x: 100, y: 100 }, key: 'message' },
   { id: '2', title: '關鍵字節點', type: '關鍵字判定', position: { x: 300, y: 100 }, key: 'keyword' },
@@ -84,33 +97,29 @@ const createNodes = (data) => {
 };
 
 const App = () => {
-  const [data, setData] = useState(initialData);
+  const [data] = useState(initialData);
   const [nodes, setNodes, onNodesChange] = useNodesState(createNodes(data));
-  const [edges, setEdges] = useState([]);
+  const [edges, setEdges] = useState(initialEdges);
   const [barMenuOpen, setBarMenuOpen] = useState(false);
-
-  // // 拖曳結束後 (放開滑鼠)
-  // const handleNodeDragStop = useCallback((event, node) => {
-  //   console.log(`節點 ${node.id} 最後位置：`, node.position);
-  // }, []);
+  const onConnect = useCallback((params) => {
+    setEdges((eds) => addEdge({ ...params, type: 'initialEdge' }, eds));
+  }, []);
   return (
-    <>
-    <Navbar barMenuOpen={barMenuOpen} setBarMenuOpen={setBarMenuOpen} />
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      // onNodeDragStop={handleNodeDragStop} 
-      nodeTypes={nodeTypes}
-      snapToGrid
-      snapGrid={[20, 20]}
-      onPaneClick={() => {
-        setBarMenuOpen(false); 
-      }}
-    >
-      <Background color="#ddd" gap={20} size={1} variant="lines"/>
-    </ReactFlow>
-    </>
+    <div style={{ width: '100%', height: '100vh' }}>
+      <Navbar barMenuOpen={barMenuOpen} setBarMenuOpen={setBarMenuOpen} />
+      
+      <Panel
+        nodes={nodes}
+        setNodes={setNodes}
+        onNodesChange={onNodesChange}
+        edges={edges}
+        setEdges={setEdges}  
+        onConnect={onConnect} 
+        setBarMenuOpen={setBarMenuOpen}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+      />
+    </div>
   );
 };
 

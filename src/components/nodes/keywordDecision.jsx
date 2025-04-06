@@ -31,7 +31,7 @@ function KeywordDecisionNode({ messages }) {
             <div className="text">{msg.keyword}</div>
           <Handle
             type="source"
-            id={msg.id}
+            id={`keyword-${msg.id}`}
             position={Position.Right}
             style={{
               position: 'absolute',
