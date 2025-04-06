@@ -3,12 +3,13 @@ import ReactFlow, { Background, applyEdgeChanges } from 'reactflow';  // <<< 加
 import 'reactflow/dist/style.css';
 import { SelectBoxMenuWrapper, SelectBoxMenuItem } from './panelStyle';
 
-const Panel = ({ nodes, setNodes, onNodesChange, edges, setEdges, onConnect, setBarMenuOpen, nodeTypes, edgeTypes }) => {
+const Panel = ({ nodes, setNodes, onNodesChange, edges, 
+  setEdges, onConnect, setBarMenuOpen, 
+  nodeTypes, edgeTypes, viewport, setViewport }) => {
   const [selectedNodes, setSelectedNodes] = useState([]);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [isShiftPressed, setIsShiftPressed] = useState(false);
-
   const handlePaneClick = () => {
     setBarMenuOpen(false);
     setMenuVisible(false);
@@ -65,6 +66,10 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges, setEdges, onConnect, set
         selectionKeyCode="Shift"
         onSelectionChange={(e) => setSelectedNodes(e.nodes || [])}
         onMove={() => setMenuVisible(false)}
+        onMoveEnd={(event, transform) => {
+          setViewport(transform);  
+        }}
+        defaultViewport={viewport} 
       >
         <Background color="#ddd" gap={20} size={1} variant="lines" />
       </ReactFlow>

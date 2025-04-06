@@ -1,9 +1,9 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNodesState, addEdge } from 'reactflow';
 import 'reactflow/dist/style.css';
 import Navbar from '../components/header/navbar';
-import Panel from '../components/Panel/panel';
+import Panel from '../components/Panel/Panel';
 import IndexNode from '../components/nodes/indexNode';
 import CustomEdge from '../components/edge/edge';
 
@@ -96,12 +96,20 @@ const nodeTypes = {
     }));
   };
 
+  const getInitialViewport = () => {
+    const stored = localStorage.getItem('viewport');
+    return stored ? JSON.parse(stored) : { x: 0, y: 0, zoom: 1 };
+  };
+
   const HomePage = () => {
     const [data] = useState(initialData);
     const [nodes, setNodes, onNodesChange] = useNodesState(createNodes(data));
     const [edges, setEdges] = useState(initialEdges);
     const [barMenuOpen, setBarMenuOpen] = useState(false);
-  
+    const [viewport, setViewport] = useState(getInitialViewport());
+    useEffect(() => {
+      localStorage.setItem('viewport', JSON.stringify(viewport));
+    }, [viewport]);
     const onConnect = useCallback((params) => {
       setEdges((eds) => addEdge({ ...params, type: 'customEdge' }, eds));
     }, []);
@@ -119,6 +127,8 @@ const nodeTypes = {
           setBarMenuOpen={setBarMenuOpen}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
+          viewport={viewport}
+          setViewport={setViewport}
         />
       </div>
     );
