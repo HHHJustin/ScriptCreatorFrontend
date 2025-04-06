@@ -1,22 +1,11 @@
 import { Handle, Position } from 'reactflow';
 import ContentRenderer from './contentRenderer';
 import { Wrapper, NodeWrapper, Title, TypeBadge, TriangleButton, ContentWrapper, ContextMenu, MenuItem, SubMenu, SubMenuItem } from './indexNodeStyle';
-import { useNodeActions } from './hooks/index';
+import { useNodeActions,  navigateByNodeType } from './hooks/index';
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-
-const options = {
-  "訊息": "Message",
-  "快速回覆": "QuickReply",
-  "關鍵字判別": "KeywordDecision",
-  "標籤判別": "TagDecision",
-  "標籤操作": "TagOperation",
-  "隨機": "Random",
-  "離開群組": "LeaveGroup",
-  "彈性模板訊息": "FlexMessage",
-  "開啟圖文選單": "RichMenuON",
-  "關閉圖文選單": "RichMenuOFF",
-};
+import { useNavigate } from 'react-router-dom'; 
+import { options } from './indexTypeData';
 
 function IndexNode({ data, id }) {
   const { messages, isOpen, handleTriangleClick } = useNodeActions(data, id);
@@ -24,6 +13,14 @@ function IndexNode({ data, id }) {
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const hiddenTypes = ['關鍵字判定', '標籤判定', '隨機'];
   const menuRef = useRef(null); 
+  const navigate = useNavigate();
+
+  const handleMenuClick = (action) => {
+    setMenuVisible(false);
+    if (action === '編輯') {
+      navigateByNodeType(data.type, navigate);  // ✅ 直接呼叫
+    }
+  };
 
   const handleContextMenu = (e) => {
     e.preventDefault();
@@ -40,11 +37,6 @@ function IndexNode({ data, id }) {
 
     setMenuVisible(true);
     setMenuPosition({ x, y });
-  };
-
-  const handleMenuClick = (action) => {
-    console.log(`你點了：${action}`);
-    setMenuVisible(false);
   };
 
   useEffect(() => {
@@ -113,7 +105,6 @@ function IndexNode({ data, id }) {
             </SubMenu>
             </MenuItem>
             <MenuItem onClick={() => handleMenuClick('刪除此點')}>刪除此點</MenuItem>
-            <MenuItem onClick={() => handleMenuClick('建立連結')}>建立連結</MenuItem>
             <MenuItem onClick={() => handleMenuClick('編輯')}>編輯</MenuItem>
           </ContextMenu>,
           document.body  

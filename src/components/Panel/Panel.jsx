@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactFlow, { Background, applyEdgeChanges } from 'reactflow';  // <<< 加 applyEdgeChanges
 import 'reactflow/dist/style.css';
-import { SelectBoxMenuWrapper, SelectBoxMenuItem } from './PanelStyle';
+import { SelectBoxMenuWrapper, SelectBoxMenuItem } from './panelStyle';
 
 const Panel = ({ nodes, setNodes, onNodesChange, edges, setEdges, onConnect, setBarMenuOpen, nodeTypes, edgeTypes }) => {
   const [selectedNodes, setSelectedNodes] = useState([]);

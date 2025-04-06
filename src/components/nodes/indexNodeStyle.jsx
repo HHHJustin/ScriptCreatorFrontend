@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { typeColors } from './indexTypeColor';
+import { typeColors } from './indexTypeData';
 
 export const Wrapper = styled.div`
   width: 120px;
