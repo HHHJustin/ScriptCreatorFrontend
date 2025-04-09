@@ -9,7 +9,7 @@ const Panel = styled.div`
     border-bottom: 1px solid #ddd;
   }
 
-  .title {
+  .type {
     font-weight: bold;
     font-size: 12px;
     color: #444444;
@@ -37,7 +37,7 @@ function MessageNode({ messages }) {
     <>
       {messages.map((msg, index) => (
         <Panel key={index}>
-          <div className="title">{msg.title}</div>
+          <div className="type">{msg.type}</div>
           <div className="content">{msg.content}</div>
         </Panel>
       ))}

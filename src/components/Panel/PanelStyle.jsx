@@ -10,9 +10,22 @@ export const SelectBoxMenuWrapper = styled.div`
 `;
 
 export const SelectBoxMenuItem = styled.div`
-  padding: 8px 12px;
+  position: relative;  /* 為了讓子選單以自己為基準定位 */
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
   cursor: pointer;
+  white-space: nowrap;
+  display: flex;        
+  justify-content: space-between; 
+  font-weight: bold;
+
   &:hover {
-    background: #f0f0f0;
+    background-color: #f0f0f0;
+  }
+
+  &:hover > div {
+    display: block; /* 滑到的時候子選單打開 */
   }
 `;
+

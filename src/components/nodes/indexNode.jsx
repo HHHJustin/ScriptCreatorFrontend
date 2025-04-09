@@ -18,7 +18,9 @@ function IndexNode({ data, id }) {
   const handleMenuClick = (action) => {
     setMenuVisible(false);
     if (action === '編輯') {
-      navigateByNodeType(data.type, navigate);  // ✅ 直接呼叫
+      if(data.onEdit){
+        data.onEdit(data, id); 
+      }
     }
   };
 
@@ -94,15 +96,15 @@ function IndexNode({ data, id }) {
         createPortal(
           <ContextMenu ref={menuRef} $x={menuPosition.x} $y={menuPosition.y}>
             <MenuItem>
-            <span>新增下一個點</span>    
-            <span>▶︎</span>      
-            <SubMenu>
-              {Object.entries(options).map(([label, value]) => (
-                <SubMenuItem key={value} onClick={() => handleMenuClick(value)}>
-                  {label}
-                </SubMenuItem>
-              ))}
-            </SubMenu>
+              <span>新增下一個點</span>    
+              <span>▶︎</span>      
+              <SubMenu>
+                {Object.entries(options).map(([label, value]) => (
+                  <SubMenuItem key={value} onClick={() => handleMenuClick(value)}>
+                    {label}
+                  </SubMenuItem>
+                ))}
+              </SubMenu>
             </MenuItem>
             <MenuItem onClick={() => handleMenuClick('刪除此點')}>刪除此點</MenuItem>
             <MenuItem onClick={() => handleMenuClick('編輯')}>編輯</MenuItem>
