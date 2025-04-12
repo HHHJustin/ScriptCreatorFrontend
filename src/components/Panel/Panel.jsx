@@ -4,7 +4,7 @@ import 'reactflow/dist/style.css';
 import { SelectBoxMenuWrapper, SelectBoxMenuItem } from './panelStyle';
 import { ContextMenu, MenuItem, SubMenu, SubMenuItem } from '../nodes/indexNodeStyle';
 import { options } from '../nodes/indexTypeData';
-import MessageNodeModal from './messageModal';
+import { renderModalByType } from './madalRender';
 
 const Panel = ({ nodes, setNodes, onNodesChange, edges, 
   setEdges, onConnect, setBarMenuOpen, 
@@ -121,10 +121,7 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
           </MenuItem>
         </ContextMenu>
       )}
-
-      {editNode && (
-        <MessageNodeModal node={editNode} tags={tagList} onClose={handleCloseModal} />
-      )}
+      {renderModalByType(editNode, tagList, handleCloseModal)}
     </div>
   );
 };

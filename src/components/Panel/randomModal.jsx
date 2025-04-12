@@ -1,8 +1,8 @@
 import { React, useState } from 'react';
 import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
-TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
+TopWrapper, GoPreviousNode, BranchGoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
 
-const DataArea = ({ node }) => {
+const DataArea = ({ node, onGoNext }) => {
   const allData = node.data.content;
 
   if (!allData || !Array.isArray(allData)) {
@@ -11,8 +11,8 @@ const DataArea = ({ node }) => {
 
   const columns = [
     { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'type', label: '種類', align: 'center', width: '20%' },
-    { key: 'content', label: '內容', align: 'left', width: '60%' },
+    { key: 'condition', label: '情形', align: 'center', width: '40%' },
+    { key: 'weight', label: '權重', align: 'center', width: '20%' },
   ];
 
   return (
@@ -25,6 +25,7 @@ const DataArea = ({ node }) => {
                 {col.label}
               </Th>
             ))}
+            <Th></Th> 
           </tr>
         </thead>
         <tbody>
@@ -36,13 +37,16 @@ const DataArea = ({ node }) => {
                   style={{
                     textAlign: col.align,
                     width: col.width,
-                    whiteSpace: col.key === 'content' ? 'normal' : 'nowrap', 
-                    wordBreak: 'break-word', 
+                    whiteSpace: col.key === 'content' ? 'normal' : 'nowrap',
+                    wordBreak: 'break-word',
                   }}
                 >
                   {item[col.key]}
                 </Td>
               ))}
+              <Td style={{ textAlign: 'center' }}>
+                <BranchGoNextNode onClick={() => onGoNext(item.id)}>▶︎</BranchGoNextNode>
+              </Td>
             </Tr>
           ))}
         </tbody>
@@ -51,7 +55,7 @@ const DataArea = ({ node }) => {
   );
 };
 
-function MessageNodeModal({ node, tags, onClose }) {
+function RandomNodeModal({ node, tags, onClose }) {
   const [newTag, setNewTag] = useState('');
 
   const handleAddTag = (tagText) => {
@@ -64,7 +68,6 @@ function MessageNodeModal({ node, tags, onClose }) {
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
           <NodeTitle>{node.data.title}</NodeTitle>
-          <GoNextNode>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>
           <TagArea>
@@ -76,7 +79,7 @@ function MessageNodeModal({ node, tags, onClose }) {
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && newTag.trim() !== '') {
                   handleAddTag(newTag.trim());
-                  setNewTag('');
+                  setNewTag(''); // 清空輸入框
                 }
               }}
             />
@@ -90,11 +93,12 @@ function MessageNodeModal({ node, tags, onClose }) {
               );
             })}
           </TagArea>
-          <DataArea node={node} />
+          <DataArea node={node} 
+          onGoNext={(id) => { console.log('你點到了 id:', id); }}/>
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>
   );
 }
 
-export default MessageNodeModal;
+export default RandomNodeModal;

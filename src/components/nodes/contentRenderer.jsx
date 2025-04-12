@@ -7,6 +7,7 @@ import TagDecisionNode from './tagDecision';
 import SpecialKeywordDecisionNode from './specialKeyword';
 import RichMenuNode from './richMenu';
 import FlexMessageNode from './flexMessage';
+import FirstStepNode from './firstStep';
 
 const typeComponentMap = {
   訊息: MessageNode,
@@ -18,6 +19,7 @@ const typeComponentMap = {
   特殊關鍵字: SpecialKeywordDecisionNode,
   圖文選單: RichMenuNode,
   彈性模板: FlexMessageNode,
+  入口: FirstStepNode,
 };
 
 function ContentRenderer({ type, messages }) {

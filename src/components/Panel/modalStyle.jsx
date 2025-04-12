@@ -56,6 +56,23 @@ export const GoPreviousNode = styled.button`
 
 export const GoNextNode = styled(GoPreviousNode)``;
 
+export const BranchGoNextNode = styled.button`
+    width: 24px;
+    height: 24px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+    background: #ddd;
+    }
+`;
+
 export const NodeTitle = styled.div`
   flex: 1;
   text-align: center;
@@ -144,6 +161,20 @@ export const Table = styled.table`
   border-radius: 12px;
   overflow: hidden;
 `;
+
+export const Table2 = styled.table`
+  width: 90%;
+  display: inline-box;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+`;
+
+export const BranchNode = styled.table`
+    width: 10%;
+    display: inline-box;
+`
 
 export const Th = styled.th`
     background-color: #f0f2f5;

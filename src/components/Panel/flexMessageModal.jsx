@@ -11,8 +11,7 @@ const DataArea = ({ node }) => {
 
   const columns = [
     { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'type', label: '種類', align: 'center', width: '20%' },
-    { key: 'content', label: '內容', align: 'left', width: '60%' },
+    { key: 'message', label: '訊息', align: 'center', width: '80%' },
   ];
 
   return (
@@ -51,7 +50,7 @@ const DataArea = ({ node }) => {
   );
 };
 
-function MessageNodeModal({ node, tags, onClose }) {
+function FlexMessageNodeModal({ node, tags, onClose }) {
   const [newTag, setNewTag] = useState('');
 
   const handleAddTag = (tagText) => {
@@ -76,7 +75,7 @@ function MessageNodeModal({ node, tags, onClose }) {
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && newTag.trim() !== '') {
                   handleAddTag(newTag.trim());
-                  setNewTag('');
+                  setNewTag(''); // 清空輸入框
                 }
               }}
             />
@@ -97,4 +96,4 @@ function MessageNodeModal({ node, tags, onClose }) {
   );
 }
 
-export default MessageNodeModal;
+export default FlexMessageNodeModal;

@@ -11,8 +11,8 @@ const DataArea = ({ node }) => {
 
   const columns = [
     { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'type', label: '種類', align: 'center', width: '20%' },
-    { key: 'content', label: '內容', align: 'left', width: '60%' },
+    { key: 'operation', label: '動作', align: 'center', width: '20%' },
+    { key: 'tag', label: '標籤', align: 'center', width: '60%' },
   ];
 
   return (
@@ -51,7 +51,7 @@ const DataArea = ({ node }) => {
   );
 };
 
-function MessageNodeModal({ node, tags, onClose }) {
+function TagOperationModal({ node, tags, onClose }) {
   const [newTag, setNewTag] = useState('');
 
   const handleAddTag = (tagText) => {
@@ -97,4 +97,4 @@ function MessageNodeModal({ node, tags, onClose }) {
   );
 }
 
-export default MessageNodeModal;
+export default TagOperationModal;

@@ -13,7 +13,6 @@ function IndexNode({ data, id }) {
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const hiddenTypes = ['關鍵字判定', '標籤判定', '隨機'];
   const menuRef = useRef(null); 
-  const navigate = useNavigate();
 
   const handleMenuClick = (action) => {
     setMenuVisible(false);
@@ -85,7 +84,7 @@ function IndexNode({ data, id }) {
         <ContentWrapper>
           {messages && <ContentRenderer type={data.type} messages={messages} />}
         </ContentWrapper>
-        {data.type !== '入口' && (
+        {data.type && (
           <TriangleButton onClick={handleTriangleClick} type={data.type}>
             {isOpen ? '▲' : '▼'}
           </TriangleButton>

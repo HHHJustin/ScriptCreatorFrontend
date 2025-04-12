@@ -23,9 +23,6 @@ function Navbar({ barMenuOpen, setBarMenuOpen }) {
       case '編輯標籤':
         navigate('/setting/tag');
         break;
-      case '編輯入口':
-        navigate('/setting/firststep');
-        break;
       case '編輯圖文選單':
         navigate('/setting/richmenu');
         break;
@@ -35,8 +32,6 @@ function Navbar({ barMenuOpen, setBarMenuOpen }) {
       case 'LineBot設定':
         navigate('/setting/linebot');
         break;
-      case '新增特殊關鍵字':
-        navigate('/addspecialkeyword');
         break;
       default:
         console.warn('未知的選單項目:', action);
@@ -78,11 +73,9 @@ function Navbar({ barMenuOpen, setBarMenuOpen }) {
     {barMenuOpen && (
         <BarMenu ref={menuRef}>
           <BarMenuItem onClick={() => handleMenuClick('編輯標籤')}>編輯標籤</BarMenuItem>
-          <BarMenuItem onClick={() => handleMenuClick('編輯入口')}>設定入口</BarMenuItem>
           <BarMenuItem onClick={() => handleMenuClick('編輯圖文選單')}>編輯圖文選單</BarMenuItem>
           <BarMenuItem onClick={() => handleMenuClick('編輯彈性樣板訊息')}>編輯彈性樣板</BarMenuItem>
           <BarMenuItem onClick={() => handleMenuClick('LineBot設定')}>LineBot設定編輯</BarMenuItem>
-          <BarMenuItem onClick={() => handleMenuClick('新增特殊關鍵字')}>新增特殊關鍵字</BarMenuItem>
         </BarMenu>
       )}
     </>
