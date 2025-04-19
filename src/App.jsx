@@ -4,23 +4,27 @@ import 'reactflow/dist/style.css';
 import HomePage from './pages/HomePage';
 import SettingPage from './pages/settingPage/setting';
 import LoginPage from './pages/loginPage';
-import ChannelChoicePage from './pages/channelChoicePage';
+import ChannelPage from './pages/channelPage';
 
 const App = () => {
+  const channels = [
+    { ChannelID: 1, ChannelName: '頻道 1' },
+    { ChannelID: 2, ChannelName: '頻道 2' },
+  ];
   return (
     <Router>
       <Routes>
         {/* 主畫面 */}
-        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
 
         {/* 設定頁面 */}
         <Route path="/setting" element={<SettingPage />} />
 
         {/* 登入頁面 */}
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
 
         {/* 頻道選擇頁面 */}
-        <Route path="/channel" element={<ChannelChoicePage />} />
+        <Route path="/channel" element={<ChannelPage channels={channels} />} />
       </Routes>
     </Router>
   );

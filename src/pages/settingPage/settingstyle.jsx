@@ -20,6 +20,7 @@ export const SettingWrapper = styled.div`
   width: 60%;
   height: 80%;
   max-width: 90%;
+  overflow-y: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 `;
 
@@ -53,30 +54,31 @@ export const ContentArea = styled.div`
 // 樣式
 export const TableContainer = styled.div`
     width: 100%;
+    max-height: 80%;
     overflow-x: auto;
+    overflow-y: auto;
     border: 1px solid #000000;
     border-radius: 8px;
 `;
 
 export const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
-  th, td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #eee;
-    text-align: center;
-  }
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
 
-  caption {
-    font-size: 18px;
-    font-weight: bold;
-    padding: 12px;
-  }
+    caption {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 12px;
+    }
 `;
 
 export const Button = styled.button`

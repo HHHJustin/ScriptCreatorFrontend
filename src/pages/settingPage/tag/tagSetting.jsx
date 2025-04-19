@@ -5,6 +5,8 @@ const TagSettingPage = () => {
     const [tags, setTags] = useState([
         { id: 1, name: '標籤1' },
         { id: 2, name: '標籤2' },
+        { id: 3, name: '標籤2' },
+        { id: 4, name: '標籤2' },
     ]);
 
     const handleAddTag = (newTag) => {
