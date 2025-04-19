@@ -36,7 +36,7 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
   };
 
   const handleEditNode = (data, id) => {
-    setEditNode({ data, id });  // 打開編輯 Modal
+    setEditNode({ data, id });  
   };
 
   const handleCloseModal = () => {

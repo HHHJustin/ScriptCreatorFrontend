@@ -20,18 +20,11 @@ function Navbar({ barMenuOpen, setBarMenuOpen }) {
   const handleMenuClick = (action) => {
     setBarMenuOpen(false); 
     switch (action) {
-      case '編輯標籤':
-        navigate('/setting/tag');
+      case '編輯':
+        navigate('/setting');
         break;
-      case '編輯圖文選單':
-        navigate('/setting/richmenu');
-        break;
-      case '編輯彈性樣板訊息':
-        navigate('/setting/flexmessage');
-        break;
-      case 'LineBot設定':
-        navigate('/setting/linebot');
-        break;
+      case '返回':
+        navigate('/channel');
         break;
       default:
         console.warn('未知的選單項目:', action);
@@ -72,10 +65,8 @@ function Navbar({ barMenuOpen, setBarMenuOpen }) {
     </Wrapper>
     {barMenuOpen && (
         <BarMenu ref={menuRef}>
-          <BarMenuItem onClick={() => handleMenuClick('編輯標籤')}>編輯標籤</BarMenuItem>
-          <BarMenuItem onClick={() => handleMenuClick('編輯圖文選單')}>編輯圖文選單</BarMenuItem>
-          <BarMenuItem onClick={() => handleMenuClick('編輯彈性樣板訊息')}>編輯彈性樣板</BarMenuItem>
-          <BarMenuItem onClick={() => handleMenuClick('LineBot設定')}>LineBot設定編輯</BarMenuItem>
+          <BarMenuItem onClick={() => handleMenuClick('編輯')}>編輯</BarMenuItem>
+          <BarMenuItem onClick={() => handleMenuClick('返回')}>返回</BarMenuItem>
         </BarMenu>
       )}
     </>
