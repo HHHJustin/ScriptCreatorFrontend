@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Popup, PopupContent, TextArea, FileInput, TableContainer, Table, Button } from "../settingstyle";
+import { Popup, PopupContent, TextArea, FileInput, TableContainer, Table, Button } from "../style";
 
 const FlexMessageTable = ({ flexMessages, onEdit, onDelete, onAddNew }) => {
   const [showPopup, setShowPopup] = useState(false);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableContainer, Table, Button, Input } from '../settingstyle';
+import { TableContainer, Table, Button, Input } from '../style';
 
 // 組件
 const TagTable = ({ tags, onAddTag, onDeleteTag, onEditTag }) => {

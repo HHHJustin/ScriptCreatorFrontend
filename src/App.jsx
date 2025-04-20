@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useState } from 'react';
 import 'reactflow/dist/style.css';
-import HomePage from './pages/HomePage';
-import SettingPage from './pages/settingPage/setting';
-import LoginPage from './pages/loginPage';
-import ChannelPage from './pages/channelPage';
+import HomePage from './pages/routerPage/HomePage';
+import SettingPage from './pages/routerPage/setting';
+import LoginPage from './pages/routerPage/loginPage';
+import ChannelPage from './pages/routerPage/channelPage';
 
 const App = () => {
   const channels = [

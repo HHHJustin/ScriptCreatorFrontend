@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InputContainer, InputWrapper, Label, Input, Button, TableContainer } from '../settingstyle';
+import { InputContainer, InputWrapper, Label, Input, Button, TableContainer } from '../style';
 
 const LineBotSettingPage = () => {
   const [channelSecret, setChannelSecret] = useState('');

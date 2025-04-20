@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import RichMenuTable from './richMenuStyle';
+import RichMenuTable from './richMenuTable';
 
 const RichMenuSettingPage = () => {
   const [richMenus, setRichMenus] = useState([]);

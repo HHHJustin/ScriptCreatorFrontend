@@ -1,7 +1,7 @@
 import FlexMessageSettingPage from "./flexMessage/flexMessageSetting";
 import LineBotSettingPage from "./lineBotSetting/lineBotSetting";
-import RichMenuSettingPage from "./richMenu/richMenuSetting";
-import TagSettingPage from "./tag/tagSetting";
+import RichMenuSettingPage from "./richMenu/richMenuPage";
+import TagSettingPage from "./tag/tagSettingPage";
 
 export const RenderCurrentPage = ({ currentTab }) => {
   switch (currentTab) {

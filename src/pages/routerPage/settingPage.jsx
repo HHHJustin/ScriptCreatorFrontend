@@ -1,5 +1,5 @@
-import { SettingOverlay, SettingWrapper, TabsWrapper, TabButton, ContentArea  } from "./settingstyle";
-import { RenderCurrentPage } from "./settingRender";
+import { SettingOverlay, SettingWrapper, TabsWrapper, TabButton, ContentArea  } from "../settingPage/style";
+import { RenderCurrentPage } from "../settingPage/render";
 import { useState } from "react";
 
 const SettingPage = () => {

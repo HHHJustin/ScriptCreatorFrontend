@@ -1,25 +1,5 @@
-import styled from 'styled-components';
 import { Handle, Position } from 'reactflow';
-
-const Container = styled.div`
-  width: 100%;
-`;
-
-const Panel = styled.div`
-  padding: 16px 12px;
-  border-bottom: 1px solid #ddd;
-
-  .text {
-    font-weight: bold;
-    font-size: 12px;
-    color: #444444;;
-    margin-bottom: 4px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    text-align: center;
-  }
-`;
+import { Panel, Container } from './nodeStyle';
 
 function SpecialKeywordDecisionNode({ messages }) {
   if (!messages || messages.length === 0) return null;

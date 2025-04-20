@@ -2,10 +2,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNodesState, addEdge } from 'reactflow';
 import 'reactflow/dist/style.css';
-import Navbar from '../components/header/navbar';
-import Panel from '../components/Panel/Panel';
-import IndexNode from '../components/nodes/indexNode';
-import CustomEdge from '../components/edge/edge';
+import Navbar from '../../components/header/navbar';
+import Panel from '../../components/Panel/Panel';
+import IndexNode from '../../components/nodes/indexNode';
+import CustomEdge from '../../components/edge/edge';
 
 const nodeTypes = {
   indexNode: IndexNode,

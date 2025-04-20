@@ -1,10 +1,9 @@
 import { Handle, Position } from 'reactflow';
 import ContentRenderer from './contentRenderer';
 import { Wrapper, NodeWrapper, Title, TypeBadge, TriangleButton, ContentWrapper, ContextMenu, MenuItem, SubMenu, SubMenuItem } from './indexNodeStyle';
-import { useNodeActions,  navigateByNodeType } from './hooks/index';
+import { useNodeActions } from './hooks/index';
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom'; 
 import { options } from './indexTypeData';
 
 function IndexNode({ data, id }) {
