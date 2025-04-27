@@ -1,5 +1,5 @@
-import FlexMessageSettingPage from "./flexMessage/flexMessageSetting";
-import LineBotSettingPage from "./lineBotSetting/lineBotSetting";
+import FlexMessageSettingPage from "./flexMessage/flexMessagePage";
+import LineBotSettingPage from "./lineBotSetting/lineBotSettingPage";
 import RichMenuSettingPage from "./richMenu/richMenuPage";
 import TagSettingPage from "./tag/tagSettingPage";
 

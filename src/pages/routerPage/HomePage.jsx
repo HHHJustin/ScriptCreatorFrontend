@@ -1,11 +1,13 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { useNodesState, addEdge } from 'reactflow';
+import { useNodesState, useEdgesState, addEdge } from 'reactflow';
 import 'reactflow/dist/style.css';
 import Navbar from '../../components/header/navbar';
 import Panel from '../../components/Panel/Panel';
 import IndexNode from '../../components/nodes/indexNode';
 import CustomEdge from '../../components/edge/edge';
+import { useParams } from 'react-router-dom';
+
 
 const nodeTypes = {
   indexNode: IndexNode,
@@ -15,58 +17,37 @@ const edgeTypes = {
   customEdge: CustomEdge,
 };
   
-const initialData = {
-  message: [
-    { id: '1', type: '文字', content: '你不是真正的快樂。你的笑只是你穿的保護色。你決定不恨了。也決定不愛了' },
-    { id: '2', type: '文字', content: '你的笑只是你穿的保護色。' },
-  ],
-  keyword: [
-    { id: '1', keyword: '大家好' },
-    { id: '2', keyword: '你好' },
-    { id: '3', keyword: '你好棒' },
-    { id: '4', keyword: '你好強' },
-  ],
-  quickReply: [
-    { id: '1', button: '這是按鈕A', reply: '這是回覆A' },
-    { id: '2', button: '這是按鈕B', reply: '這是回覆B' },
-    { id: '3', button: '這是按鈕C', reply: '這是回覆C' },
-  ],
-  tagOperation: [
-    { id: '1', tag: '標籤A', operation: '新增' },
-    { id: '2', tag: '標籤B', operation: '移除' },
-    { id: '3', tag: '標籤C', operation: '新增' },
-  ],
-  tagDecision: [
-    { id: '1', title: '選項A', tags: '1, 2, 3' },
-    { id: '2', title: '選項B', tags: '1, 2' },
-    { id: '3', title: '選項C', tags: '1' },
-  ],
-  firstStep: [
-    { id: '1', type: '加入好友' },
-  ],
-  random: [
-    { id: '1', condition: '狀況1', weight: '5' },
-    { id: '2', condition: '狀況2', weight: '2' },
-    { id: '3', condition: '狀況3', weight: '3' },
-  ],
-  specialKeyword: [
-    { id: '1', keyword: '特殊1' },
-    { id: '2', keyword: '特殊2' },
-    { id: '3', keyword: '特殊3' },
-  ],
-  richMenu: [
-    { id: '1', menu: '圖文選單1'},
-  ],
-  flexMessage: [
-    { id: '1', message: '彈性模板訊息1' },
-  ],
+const fetchGraphData = async (channel, setNodes, setEdges) => {
+  try {
+    const res = await fetch(`/api/${channel}/home`);
+    const data = await res.json();
+
+    const newNodes = data.nodes.map(node => ({
+      id: String(node.id),
+      type: 'indexNode',
+      position: { x: Number(node.x), y: Number(node.y) },
+      data: {
+        title: node.title,
+        type: node.type,
+      },
+      style: { zIndex: 1 },
+    }));
+
+    const newEdges = data.links.map(link => ({
+      id: `e${link.from}-${link.to}`,
+      source: String(link.from),
+      target: String(link.to),
+      sourceHandle: link.sourceFrom ? `keyword-${link.sourceFrom}` : undefined,
+      type: 'customEdge',
+    }));
+
+    setNodes(newNodes);
+    setEdges(newEdges);
+  } catch (err) {
+    console.error('Failed to fetch graph data:', err);
+  }
 };
 
-const initialEdges = [
-  { id: 'e1-2', source: '1', target: '2', type: 'customEdge' },
-  { id: 'e-keyword3-to-node3', source: '2', target: '3', sourceHandle: 'keyword-3',  type: 'customEdge' },
-  { id: 'e-keyword2-to-node4', source: '2', target: '4', sourceHandle: 'keyword-4',  type: 'customEdge' },
-];
 
 
 const nodeConfig = [
@@ -90,38 +71,69 @@ const tagList = [
   {id: '5', tag: '標籤5'},
 ]
 
-const createNodes = (data) => {
-  return nodeConfig.map((item) => ({
-    id: item.id,
-    type: 'indexNode',
-    position: item.position,
-    data: {
-      title: item.title,
-      type: item.type,
-      content: data[item.key],
-      tags: item.tags,
-    },
-    style: { zIndex: 1 },
-  }));
-};
-
 const getInitialViewport = () => {
   const stored = localStorage.getItem('viewport');
   return stored ? JSON.parse(stored) : { x: 0, y: 0, zoom: 1 };
 };
 
 const HomePage = () => {
-  const [data] = useState(initialData);
-  const [nodes, setNodes, onNodesChange] = useNodesState(createNodes(data));
-  const [edges, setEdges] = useState(initialEdges);
+  const { channel } = useParams(); 
+  const [nodes, setNodes, onNodesChangeBase] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [barMenuOpen, setBarMenuOpen] = useState(false);
   const [viewport, setViewport] = useState(getInitialViewport());
-  useEffect(() => {
-    localStorage.setItem('viewport', JSON.stringify(viewport));
-  }, [viewport]);
+
+  const updateNodeLocation = async (node) => {
+    try {
+      await fetch('/api/updatelocation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          currentNodeId: Number(node.id),
+          channelId: Number(channel),
+          locX: node.position.x,
+          locY: node.position.y,
+        }),
+      });
+    } catch (err) {
+      console.error('Failed to update node location:', err);
+    }
+  };
+
   const onConnect = useCallback((params) => {
     setEdges((eds) => addEdge({ ...params, type: 'customEdge' }, eds));
   }, []);
+
+  const onNodesChange = useCallback((changes) => {
+    changes.forEach((change) => {
+      if (change.type === 'position' && change.position) {
+        const movedNode = nodes.find((n) => n.id === change.id);
+        if (movedNode) {
+          const updatedNode = {
+            ...movedNode,
+            position: {
+              ...movedNode.position,
+              ...change.position,
+            },
+          };
+          updateNodeLocation(updatedNode);
+        }
+      }
+    });
+
+    // 最後記得套用原本的變化
+    onNodesChangeBase(changes);
+  }, [nodes, onNodesChangeBase]);
+
+  useEffect(() => {
+    fetchGraphData(channel, setNodes, setEdges);
+  }, [channel]);
+  
+  useEffect(() => {
+    localStorage.setItem('viewport', JSON.stringify(viewport));
+  }, [viewport]);
 
   return (
     <div style={{ width: '100%', height: '100vh' }}>
@@ -129,7 +141,7 @@ const HomePage = () => {
       <Panel
         nodes={nodes}
         setNodes={setNodes}
-        onNodesChange={onNodesChange}
+        onNodesChange={onNodesChange} 
         edges={edges}
         setEdges={setEdges}
         onConnect={onConnect}

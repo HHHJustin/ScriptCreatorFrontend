@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TagTable from './tagSettingPage';
+import TagTable from './tagSettingTable';
 
 const TagSettingPage = () => {
     const [tags, setTags] = useState([

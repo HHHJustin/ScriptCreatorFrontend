@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Wrapper, IconWrapper, SearchWrapper, Search, BarMenu, BarMenuItem } from './narbarStyle';
 
 
@@ -9,6 +9,7 @@ function Navbar({ barMenuOpen, setBarMenuOpen }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate(); 
+  const { channel } = useParams(); 
   const toggleSearch = () => {
     setSearchOpen(prev => !prev);
   };
@@ -21,7 +22,7 @@ function Navbar({ barMenuOpen, setBarMenuOpen }) {
     setBarMenuOpen(false); 
     switch (action) {
       case '編輯':
-        navigate('/setting');
+        navigate(`/${channel}/setting`);
         break;
       case '返回':
         navigate('/channel');

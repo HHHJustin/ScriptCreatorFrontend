@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useState } from 'react';
 import 'reactflow/dist/style.css';
 import HomePage from './pages/routerPage/HomePage';
-import SettingPage from './pages/routerPage/setting';
+import SettingPage from './pages/routerPage/settingPage';
 import LoginPage from './pages/routerPage/loginPage';
 import ChannelPage from './pages/routerPage/channelPage';
 
@@ -15,10 +15,10 @@ const App = () => {
     <Router>
       <Routes>
         {/* 主畫面 */}
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/:channel/home" element={<HomePage />} />
 
         {/* 設定頁面 */}
-        <Route path="/setting" element={<SettingPage />} />
+        <Route path="/:channel/setting" element={<SettingPage />} />
 
         {/* 登入頁面 */}
         <Route path="/" element={<LoginPage />} />

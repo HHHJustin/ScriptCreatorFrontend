@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import FlexMessageTable from './flexMessageStyle';
+import FlexMessageTable from './flexMessageTable';
 
 const FlexMessageSettingPage = () => {
   const [flexMessages, setFlexMessages] = useState([]);

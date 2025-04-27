@@ -1,8 +1,12 @@
 import { SettingOverlay, SettingWrapper, TabsWrapper, TabButton, ContentArea  } from "../settingPage/style";
 import { RenderCurrentPage } from "../settingPage/render";
 import { useState } from "react";
+import { useParams } from 'react-router-dom';
+
 
 const SettingPage = () => {
+  const { channel } = useParams();  // 這裡就拿到網址上的 channel
+  console.log('現在是 channel:', channel);
   const [currentTab, setCurrentTab] = useState('tab1');
     return (
       <SettingOverlay>
