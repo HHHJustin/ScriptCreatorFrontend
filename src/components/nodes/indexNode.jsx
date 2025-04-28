@@ -1,7 +1,7 @@
 import { Handle, Position } from 'reactflow';
 import ContentRenderer from './contentRenderer';
 import { Wrapper, NodeWrapper, Title, TypeBadge, TriangleButton, ContentWrapper, ContextMenu, MenuItem, SubMenu, SubMenuItem } from './indexNodeStyle';
-import { useNodeActions } from './hooks/index';
+import { useNodeActions, handleContextMenu, handleMenuClick } from './hooks/index';
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { options } from './indexTypeData';
@@ -12,32 +12,6 @@ function IndexNode({ data, id }) {
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const hiddenTypes = ['關鍵字判定', '標籤判定', '隨機'];
   const menuRef = useRef(null); 
-
-  const handleMenuClick = (action) => {
-    setMenuVisible(false);
-    if (action === '編輯') {
-      if(data.onEdit){
-        data.onEdit(data, id); 
-      }
-    }
-  };
-
-  const handleContextMenu = (e) => {
-    e.preventDefault();
-    const offsetX = 0;
-    const offsetY = 0;
-    const maxX = window.innerWidth - 150;
-    const maxY = window.innerHeight - 150;
-
-    let x = e.clientX + offsetX;
-    let y = e.clientY + offsetY;
-
-    if (x > maxX) x = maxX;
-    if (y > maxY) y = maxY;
-
-    setMenuVisible(true);
-    setMenuPosition({ x, y });
-  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {

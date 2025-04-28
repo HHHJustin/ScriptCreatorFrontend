@@ -6,12 +6,15 @@ function RichMenuNode({ messages }) {
 
   return (
     <>
-      {messages.map((msg, index) => (
+    {messages.map((msgWrapper, index) => {
+      const msg = msgWrapper.RichMenu;  
+      return (
         <Panel key={index}>
-          <div className="menu">{msg.menu}</div>
+          <div className="menu">{msg.RichMenuName}</div>
         </Panel>
-      ))}
-    </>
+      );
+    })}
+  </>
   );
 }
 

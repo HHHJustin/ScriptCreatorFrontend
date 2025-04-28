@@ -9,7 +9,6 @@ import { renderModalByType } from './madalRender';
 const Panel = ({ nodes, setNodes, onNodesChange, edges, 
   setEdges, onConnect, setBarMenuOpen, 
   nodeTypes, edgeTypes, viewport, setViewport, tagList }) => {
-
   const [selectedNodes, setSelectedNodes] = useState([]);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });

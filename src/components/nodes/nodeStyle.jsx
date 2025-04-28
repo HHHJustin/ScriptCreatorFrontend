@@ -11,13 +11,13 @@ export const Panel = styled.div`
 
     .type {
       font-weight: bold;
-      font-size: 12px;
+      font-size: 16px;
       color: #444444;
       margin-bottom: 4px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      text-align: center;
+      text-align: left;
     }
 
     .message {

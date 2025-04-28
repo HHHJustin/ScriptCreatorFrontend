@@ -6,12 +6,15 @@ function QuickReplyNode({ messages }) {
 
   return (
     <>
-      {messages.map((msg, index) => (
-        <Panel key={index}>
-          <div className="title">{msg.button}</div>
-          <div className="content">{msg.reply}</div>
-        </Panel>
-      ))}
+      {messages.map((msgWrapper, index) => {
+        const msg = msgWrapper.Message;  
+        return (
+          <Panel key={index}>
+            <div className="type">{msg.Button}</div>
+            <div className="content">{msg.Reply}</div>
+          </Panel>
+        );
+      })}
     </>
   );
 }

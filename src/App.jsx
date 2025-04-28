@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useState } from 'react';
 import 'reactflow/dist/style.css';
-import HomePage from './pages/routerPage/HomePage';
+import HomePage from './pages/routerPage/homePage';
 import SettingPage from './pages/routerPage/settingPage';
 import LoginPage from './pages/routerPage/loginPage';
 import ChannelPage from './pages/routerPage/channelPage';

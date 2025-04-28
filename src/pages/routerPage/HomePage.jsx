@@ -7,6 +7,7 @@ import Panel from '../../components/Panel/Panel';
 import IndexNode from '../../components/nodes/indexNode';
 import CustomEdge from '../../components/edge/edge';
 import { useParams } from 'react-router-dom';
+import { updateNodeLocation, createOnConnect, createOnNodesChange, fetchGraphData } from './hooks/homepage';
 
 
 const nodeTypes = {
@@ -16,39 +17,6 @@ const nodeTypes = {
 const edgeTypes = {
   customEdge: CustomEdge,
 };
-  
-const fetchGraphData = async (channel, setNodes, setEdges) => {
-  try {
-    const res = await fetch(`/api/${channel}/home`);
-    const data = await res.json();
-
-    const newNodes = data.nodes.map(node => ({
-      id: String(node.id),
-      type: 'indexNode',
-      position: { x: Number(node.x), y: Number(node.y) },
-      data: {
-        title: node.title,
-        type: node.type,
-      },
-      style: { zIndex: 1 },
-    }));
-
-    const newEdges = data.links.map(link => ({
-      id: `e${link.from}-${link.to}`,
-      source: String(link.from),
-      target: String(link.to),
-      sourceHandle: link.sourceFrom ? `keyword-${link.sourceFrom}` : undefined,
-      type: 'customEdge',
-    }));
-
-    setNodes(newNodes);
-    setEdges(newEdges);
-  } catch (err) {
-    console.error('Failed to fetch graph data:', err);
-  }
-};
-
-
 
 const nodeConfig = [
   { id: '1', title: '訊息節點', type: '訊息', position: { x: 100, y: 100 }, key: 'message', tags: '標籤1, 標籤2' },
@@ -83,49 +51,8 @@ const HomePage = () => {
   const [barMenuOpen, setBarMenuOpen] = useState(false);
   const [viewport, setViewport] = useState(getInitialViewport());
 
-  const updateNodeLocation = async (node) => {
-    try {
-      await fetch('/api/updatelocation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          currentNodeId: Number(node.id),
-          channelId: Number(channel),
-          locX: node.position.x,
-          locY: node.position.y,
-        }),
-      });
-    } catch (err) {
-      console.error('Failed to update node location:', err);
-    }
-  };
-
-  const onConnect = useCallback((params) => {
-    setEdges((eds) => addEdge({ ...params, type: 'customEdge' }, eds));
-  }, []);
-
-  const onNodesChange = useCallback((changes) => {
-    changes.forEach((change) => {
-      if (change.type === 'position' && change.position) {
-        const movedNode = nodes.find((n) => n.id === change.id);
-        if (movedNode) {
-          const updatedNode = {
-            ...movedNode,
-            position: {
-              ...movedNode.position,
-              ...change.position,
-            },
-          };
-          updateNodeLocation(updatedNode);
-        }
-      }
-    });
-
-    // 最後記得套用原本的變化
-    onNodesChangeBase(changes);
-  }, [nodes, onNodesChangeBase]);
+  const onConnect = useCallback(createOnConnect(setEdges), [setEdges]);
+  const onNodesChange = useCallback(createOnNodesChange(nodes, onNodesChangeBase, updateNodeLocation, channel), [nodes, onNodesChangeBase, channel]);
 
   useEffect(() => {
     fetchGraphData(channel, setNodes, setEdges);
