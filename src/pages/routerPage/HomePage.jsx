@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { useNodesState, useEdgesState, addEdge } from 'reactflow';
+import { useNodesState, useEdgesState, addEdge, ReactFlowProvider } from 'reactflow';
 import 'reactflow/dist/style.css';
 import Navbar from '../../components/header/navbar';
 import Panel from '../../components/Panel/Panel';
@@ -51,7 +51,7 @@ const HomePage = () => {
   const [barMenuOpen, setBarMenuOpen] = useState(false);
   const [viewport, setViewport] = useState(getInitialViewport());
 
-  const onConnect = useCallback(createOnConnect(setEdges), [setEdges]);
+  const onConnect = useCallback(createOnConnect(setEdges, channel), [setEdges]);
   const onNodesChange = useCallback(createOnNodesChange(nodes, onNodesChangeBase, updateNodeLocation, channel), [nodes, onNodesChangeBase, channel]);
 
   useEffect(() => {
@@ -65,6 +65,7 @@ const HomePage = () => {
   return (
     <div style={{ width: '100%', height: '100vh' }}>
       <Navbar barMenuOpen={barMenuOpen} setBarMenuOpen={setBarMenuOpen} />
+      <ReactFlowProvider>
       <Panel
         nodes={nodes}
         setNodes={setNodes}
@@ -79,6 +80,7 @@ const HomePage = () => {
         setViewport={setViewport}
         tagList={tagList}
       />
+      </ReactFlowProvider>
     </div>
   );
 };

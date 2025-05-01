@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import ReactFlow, { Background, applyEdgeChanges } from 'reactflow';
+import ReactFlow, { Background, applyEdgeChanges, useReactFlow } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { SelectBoxMenuWrapper, SelectBoxMenuItem } from './panelStyle';
 import { ContextMenu, MenuItem, SubMenu, SubMenuItem } from '../nodes/indexNodeStyle';
 import { options } from '../nodes/indexTypeData';
 import { renderModalByType } from './madalRender';
+import { handleCreateNodeClick } from './hook/panel';
+import { useParams, useNavigate } from 'react-router-dom';
+
+
 
 const Panel = ({ nodes, setNodes, onNodesChange, edges, 
   setEdges, onConnect, setBarMenuOpen, 
@@ -15,9 +19,12 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
   const [panelMenuVisible, setPanelMenuVisible] = useState(false);
   const [panelMenuPosition, setPanelMenuPosition] = useState({ x: 0, y: 0 });
   const [editNode, setEditNode] = useState(null); 
-
+  const { screenToFlowPosition } = useReactFlow();
+  const navigate = useNavigate();
   const handlePaneRightClick = (e) => {
     e.preventDefault();
+    const pos = screenToFlowPosition({ x: e.clientX, y: e.clientY });
+    setPanelMenuPosition(pos); 
     setBarMenuOpen(false);
     setMenuVisible(false);
     setPanelMenuVisible(true);
@@ -57,7 +64,7 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
-
+    const { channel } = useParams();
   return (
     <div style={{ width: '100%', height: '100%' }} onContextMenu={handleContextMenu}>
       <ReactFlow
@@ -112,7 +119,10 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
             <span>▶︎</span>      
             <SubMenu>
               {Object.entries(options).map(([label, value]) => (
-                <SubMenuItem key={value} onClick={() => console.log(value)}>
+                <SubMenuItem
+                  key={value}
+                  onClick={() => handleCreateNodeClick(value, panelMenuPosition.x, panelMenuPosition.y, channel, navigate)}
+                >
                   {label}
                 </SubMenuItem>
               ))}

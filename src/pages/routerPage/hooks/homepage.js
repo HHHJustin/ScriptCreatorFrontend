@@ -33,7 +33,7 @@ export const fetchGraphData = async (channel, setNodes, setEdges) => {
 
 export const updateNodeLocation = async (node, channel) => {
   try {
-    await fetch('/api/updatelocation', {
+    await fetch(`/api/${channel}/updatelocation`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,11 +50,27 @@ export const updateNodeLocation = async (node, channel) => {
   }
 };
 
-export const createOnConnect = (setEdges) => {
-  return (params) => {
+export const createOnConnect = (setEdges, channel) => {
+  return async (params) => {
+    const { source, sourceHandle, target } = params;
     setEdges((eds) => addEdge({ ...params, type: 'customEdge' }, eds));
+    try {
+      await fetch(`/api/${channel}/connect`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sourceId: source,
+          sourceHandle: sourceHandle || null, 
+          targetId: target,
+        }),
+      });
+      console.log('✅ 已傳送連線資料到後端:', { source, sourceHandle, target });
+    } catch (err) {
+      console.error('❌ Failed to connect nodes:', err);
+    }
   };
 };
+
 
 export const createOnNodesChange = (nodes, onNodesChangeBase, updateNodeLocation, channel) => {
   return (changes) => {

@@ -70,7 +70,8 @@ export const ContextMenu = styled.div`
 
 export const MenuItem = styled.div`
   position: relative;  /* 為了讓子選單以自己為基準定位 */
-  padding: 8px 16px;
+  padding: 12px 10px;
+  min-height: 36px;
   font-size: 14px;
   color: #333;
   cursor: pointer;
@@ -85,15 +86,16 @@ export const MenuItem = styled.div`
 
   &:hover > div {
     display: block; /* 滑到的時候子選單打開 */
+    pointer-events: auto;
   }
 `;
 
 export const SubMenu = styled.div`
   display: none;
   position: absolute;
-  top: 0;
+  top: -10px;
   left: 100%; /* 子選單往右邊出現 */
-  margin-left: 2px;
+  margin-left: 1px;
   width: 140px;
   background: white;
   border: 1px solid #ccc;
@@ -106,6 +108,7 @@ export const SubMenu = styled.div`
 export const SubMenuItem = styled.div`
   padding: 8px 16px;
   font-size: 14px;
+  min-height: 36px;
   color: #333;
   cursor: pointer;
   white-space: nowrap;
