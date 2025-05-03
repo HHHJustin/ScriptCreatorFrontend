@@ -40,7 +40,6 @@ export const updateNodeLocation = async (node, channel) => {
       },
       body: JSON.stringify({
         currentNodeId: Number(node.id),
-        channelId: Number(channel),
         locX: node.position.x,
         locY: node.position.y,
       }),

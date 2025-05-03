@@ -13,7 +13,8 @@ export const Wrapper = styled.div`
 export const NodeWrapper = styled.div`
   background: ${({ type }) => typeColors[type]?.bg || 'white'};
   border: 2px solid ${({ type }) => typeColors[type]?.border || '#ccc'};
-  border-radius: ${({ type }) => (type === '入口' ? '5px' : '5px 5px 0 0')};
+  border-radius: ${({ type }) =>
+  ['入口', '離開群組'].includes(type) ? '5px' : '5px 5px 0 0'};
   padding: 12px 16px;
   width: 100%;
   height: 80px;

@@ -73,28 +73,27 @@ export const navigateByNodeType = (type, navigate) => {
   }
 };
 
-export const handleMenuClick = (action) => {
+export const handleDeleteNode = async (id, channel, setMenuVisible, setNodes) => {
   setMenuVisible(false);
-  if (action === '編輯') {
-    if(data.onEdit){
-      data.onEdit(data, id); 
+  const nodeID = parseInt(id, 10);
+  try {
+    const res = await fetch(`/api/${channel}/node/delete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ currentNodeID: nodeID }),
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      console.error('❌ Failed to delete node:', error);
+    } else {
+      console.log('✅ Node deleted successfully');
+      setNodes((prev) => prev.filter((node) => node.id !== id));
     }
+  } catch (err) {
+    console.error('❌ Error deleting node:', err);
   }
 };
 
-export const handleContextMenu = (e) => {
-  e.preventDefault();
-  const offsetX = 0;
-  const offsetY = 0;
-  const maxX = window.innerWidth - 150;
-  const maxY = window.innerHeight - 150;
-
-  let x = e.clientX + offsetX;
-  let y = e.clientY + offsetY;
-
-  if (x > maxX) x = maxX;
-  if (y > maxY) y = maxY;
-
-  setMenuVisible(true);
-  setMenuPosition({ x, y });
-};

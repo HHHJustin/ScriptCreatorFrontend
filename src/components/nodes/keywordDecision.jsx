@@ -2,11 +2,10 @@ import { Handle, Position } from 'reactflow';
 import { Panel, Container } from './nodeStyle';
 
 function KeywordDecisionNode({ messages }) {
-  if (!messages || !messages.KeywordDesisions || messages.KeywordDesisions.length === 0) return null;
-
+  const keywordDecisions = messages?.KeywordDesisions ?? [];
   return (
     <Container>
-      {messages.KeywordDesisions.map((msg) => (
+      {keywordDecisions.map((msg) => (
         <Panel key={msg.KeywordDecision.KWDecisionID}>
           <div className="text">{msg.KeywordDecision.Keyword}</div>
           <Handle
@@ -27,9 +26,9 @@ function KeywordDecisionNode({ messages }) {
         
         </Panel>
       ))}
-       {messages.Else && messages.Else.NextNode !== 0 && (
+       {messages.Else && (
         <Panel key="else-panel">
-          <div className="text">其他條件</div>
+          <div className="text">其他情況</div>
           <Handle
             type="source"
             id={`else-${messages.Else.KWDecisionElseID}`}

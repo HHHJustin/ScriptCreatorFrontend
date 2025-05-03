@@ -4,6 +4,7 @@ export const typeColors = {
   '快速回覆': { bg: '#ffebee', border: '#ef5350', title: '#c62828', badge: '#ffcdd2', button: '#e53935' },
   '標籤操作': { bg: '#f3e5f5', border: '#ab47bc', title: '#8e24aa', badge: '#e1bee7', button: '#ba68c8' },
   '入口': { bg: '#e8f5e9', border: '#66bb6a', title: '#2e7d32', badge: '#c8e6c9', button: '#43a047' },
+  '離開群組': { bg: '#f5f5f5', border: '#bdbdbd', title: '#424242', badge: '#e0e0e0', button: '#757575' },
   '標籤判定': { bg: '#e3f2fd', border: '#64b5f6', title: '#1565c0', badge: '#bbdefb', button: '#42a5f5' },
   '隨機': { bg: '#fff8e1', border: '#fbc02d', title: '#f57f17', badge: '#ffecb3', button: '#f9a825' },
   '特殊關鍵字': { bg: '#ede7f6', border: '#7e57c2', title: '#5e35b1', badge: '#d1c4e9', button: '#7e57c2' },
@@ -22,4 +23,5 @@ export const options = {
   "彈性模板訊息": "FlexMessage",
   "開啟圖文選單": "RichMenuON",
   "關閉圖文選單": "RichMenuOFF",
+  "入口": "FirstStep"
 };

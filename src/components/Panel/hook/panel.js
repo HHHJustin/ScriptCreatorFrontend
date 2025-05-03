@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // 在 component 外層寫一個包裝函數
 export const handleCreateNodeClick = async (type, x, y, channel, navigate) => {
   try {
-    const res = await fetch(`/api/${channel}/create/node`, {
+    const res = await fetch(`/api/${channel}/node/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

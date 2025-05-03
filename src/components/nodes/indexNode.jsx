@@ -1,10 +1,11 @@
-import { Handle, Position } from 'reactflow';
+import { Handle, Position, useReactFlow } from 'reactflow';
 import ContentRenderer from './contentRenderer';
 import { Wrapper, NodeWrapper, Title, TypeBadge, TriangleButton, ContentWrapper, ContextMenu, MenuItem, SubMenu, SubMenuItem } from './indexNodeStyle';
-import { useNodeActions, handleContextMenu, handleMenuClick } from './hooks/index';
-import { useState, useEffect, useRef } from 'react';
+import { useNodeActions, handleDeleteNode } from './hooks/index';
+import { useState, useEffect, useRef} from 'react';
 import { createPortal } from 'react-dom';
 import { options } from './indexTypeData';
+import { useParams } from 'react-router-dom';
 
 function IndexNode({ data, id }) {
   const { messages, isOpen, handleTriangleClick } = useNodeActions(data, id);
@@ -12,7 +13,8 @@ function IndexNode({ data, id }) {
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const hiddenTypes = ['關鍵字判定', '標籤判定', '隨機'];
   const menuRef = useRef(null); 
-
+  const { setNodes } = useReactFlow();
+  const { channel } = useParams(); 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -30,6 +32,33 @@ function IndexNode({ data, id }) {
     };
   }, [menuVisible]);
 
+  const handleMenuClick = (action) => {
+    setMenuVisible(false);
+    if (action === '編輯') {
+      if(data.onEdit){
+        data.onEdit(data, id); 
+      }
+    } else if (action === '刪除此點') {
+      handleDeleteNode(id, channel, setMenuVisible, setNodes);
+    }
+  };
+
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    const offsetX = 0;
+    const offsetY = 0;
+    const maxX = window.innerWidth - 150;
+    const maxY = window.innerHeight - 150;
+
+    let x = e.clientX + offsetX;
+    let y = e.clientY + offsetY;
+
+    if (x > maxX) x = maxX;
+    if (y > maxY) y = maxY;
+
+    setMenuVisible(true);
+    setMenuPosition({ x, y });
+  };
   return (
     <>
       <Wrapper>
@@ -57,7 +86,7 @@ function IndexNode({ data, id }) {
         <ContentWrapper>
           {messages && <ContentRenderer type={data.type} messages={messages} />}
         </ContentWrapper>
-        {data.type && (
+        {data.type && data.type !== '入口' && data.type !== '離開群組' && (
           <TriangleButton onClick={handleTriangleClick} type={data.type}>
             {isOpen ? '▲' : '▼'}
           </TriangleButton>
