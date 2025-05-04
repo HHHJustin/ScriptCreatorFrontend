@@ -95,7 +95,7 @@ export const ContentWrapper = styled.div`
 `;
 
 export const TagArea = styled.div`
-    width: 35%;
+    width: 25%;
     min-height: 100px;
     display: inline-box;
     flex-wrap: wrap; 
@@ -205,4 +205,46 @@ export const Tr = styled.tr`
   &:hover {
     background-color: #f9fafb;
   }
+`;
+
+export const StyledSelect = styled.select`
+  width: 100%;
+  padding: 4px;
+  font-size: 14px;
+`;
+
+export const StyledButton = styled.button`
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
+
+export const MediaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+`;
+
+export const MediaFileName = styled.span`
+  font-size: 14px;
+  color: #666;
+  word-break: break-word;
+  text-align: center;
+`;
+
+export const StyledTextArea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+  font-size: 14px;
+  font-family: inherit;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  line-height: 1.5;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+  outline: none;
 `;

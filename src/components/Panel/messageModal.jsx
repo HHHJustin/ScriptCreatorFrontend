@@ -1,63 +1,35 @@
-import { React, useState } from 'react';
-import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
+import { React, useState, useEffect } from 'react';
+import MessageDataArea from './DataArea/message';
+import { ModalOverlay, ModalContent, 
 TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
-
-const DataArea = ({ node }) => {
-  const allData = node.data.content;
-
-  if (!allData || !Array.isArray(allData)) {
-    return <div>沒有資料</div>;
-  }
-
-  const columns = [
-    { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'type', label: '種類', align: 'center', width: '20%' },
-    { key: 'content', label: '內容', align: 'left', width: '60%' },
-  ];
-
-  return (
-    <DataAreaWrapper>
-      <Table>
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <Th key={col.key}>
-                {col.label}
-              </Th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {allData.map((item) => (
-            <Tr key={item.id}>
-              {columns.map((col) => (
-                <Td
-                  key={col.key}
-                  style={{
-                    textAlign: col.align,
-                    width: col.width,
-                    whiteSpace: col.key === 'content' ? 'normal' : 'nowrap', 
-                    wordBreak: 'break-word', 
-                  }}
-                >
-                  {item[col.key]}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
-    </DataAreaWrapper>
-  );
-};
+import { useParams } from 'react-router-dom';
 
 function MessageNodeModal({ node, tags, onClose }) {
+  const { channel } = useParams();
   const [newTag, setNewTag] = useState('');
+  const [fetchedNode, setFetchedNode] = useState([]);
 
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
+
+  const fetchNodeDataAgain = async () => {
+    if (!node) return;
+    try {
+      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
+      const data = await res.json();
+      setFetchedNode(data); 
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchNodeDataAgain();
+  }, [node, channel]);
+
   if (!node) return null;
+
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -90,7 +62,11 @@ function MessageNodeModal({ node, tags, onClose }) {
               );
             })}
           </TagArea>
-          <DataArea node={node} />
+          <MessageDataArea
+            node={node}
+            message={fetchedNode}
+            onRefresh={fetchNodeDataAgain} // ✅ 關鍵：讓 MessageDataArea 可呼叫刷新
+          />
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>
