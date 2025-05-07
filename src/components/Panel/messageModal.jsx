@@ -65,7 +65,7 @@ function MessageNodeModal({ node, tags, onClose }) {
           <MessageDataArea
             node={node}
             message={fetchedNode}
-            onRefresh={fetchNodeDataAgain} // ✅ 關鍵：讓 MessageDataArea 可呼叫刷新
+            onRefresh={fetchNodeDataAgain}
           />
         </ContentWrapper>
       </ModalContent>

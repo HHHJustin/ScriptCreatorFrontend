@@ -1,10 +1,9 @@
 // components/DataArea.jsx
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 import {
-  DataAreaWrapper, Table, Th, Td, Tr,
-  StyledSelect, StyledButton, MediaContainer, MediaFileName, StyledTextArea
+  DataAreaWrapper, Table, Th, Td, Tr, CenteredTd, EditableTextArea,
+  StyledSelect, StyledButton, MediaContainer, MediaFileName
 } from '../modalStyle';
 
 const columns = [
@@ -14,10 +13,6 @@ const columns = [
   { key: 'action', label: '動作', align: 'center', width: '10%' },
 ];
 
-const CenteredTd = styled(Td)`
-  vertical-align: middle;
-  text-align: center;
-`;
 
 const MediaContent = ({ item, uploadMedia }) => (
   <MediaContainer>
@@ -28,16 +23,6 @@ const MediaContent = ({ item, uploadMedia }) => (
   </MediaContainer>
 );
 
-const EditableTextArea = ({ value, onChange, onBlur, onKeyDown }) => (
-  <StyledTextArea
-    value={value}
-    onChange={onChange}
-    onBlur={onBlur}
-    onKeyDown={onKeyDown}
-    autoFocus
-  />
-);
-
 const MessageDataArea = ({ node, message, onRefresh }) => {
   const [newType, setNewType] = useState('');
   const [editedContent, setEditedContent] = useState('');
@@ -46,7 +31,9 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
   const currentIDInt = parseInt(node.id, 10);
 
   const allData = Array.isArray(message)
-    ? message.filter(item => typeof item.Index === 'number').map(({ Index, Message }) => ({
+    ? message
+    .filter(item => typeof item.Index === 'number')
+    .map(({ Index, Message }) => ({
         id: Index,
         rawType: Message?.Type || '',
         type: typeToChinese(Message?.Type),

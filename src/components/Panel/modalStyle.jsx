@@ -248,3 +248,18 @@ export const StyledTextArea = styled.textarea`
   transition: border-color 0.2s ease;
   outline: none;
 `;
+
+export const CenteredTd = styled(Td)`
+  vertical-align: middle;
+  text-align: center;
+`;
+
+export const EditableTextArea = ({ value, onChange, onBlur, onKeyDown }) => (
+  <StyledTextArea
+    value={value}
+    onChange={onChange}
+    onBlur={onBlur}
+    onKeyDown={onKeyDown}
+    autoFocus
+  />
+);

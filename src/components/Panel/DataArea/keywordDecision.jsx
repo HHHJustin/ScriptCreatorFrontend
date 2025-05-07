@@ -1,22 +1,15 @@
-import { DataAreaWrapper, Table, Th, Tr, Td, StyledButton, StyledTextArea } from "../modalStyle";
+import { DataAreaWrapper, Table, Th, Tr, Td, EditableTextArea,
+    StyledButton, CenteredTd } from "../modalStyle";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 
-const CenteredTd = styled(Td)`
-  vertical-align: middle;
-  text-align: center;
-`;
-
-const EditableTextArea = ({ value, onChange, onBlur, onKeyDown }) => (
-  <StyledTextArea
-    value={value}
-    onChange={onChange}
-    onBlur={onBlur}
-    onKeyDown={onKeyDown}
-    autoFocus
-  />
-);
+const columns = [
+    { key: 'id', label: '編號', align: 'center', width: '10%' },
+    { key: 'keyword', label: '關鍵字', align: 'center', width: '50%' },
+    { key: 'action', label: '動作', align: 'center', width: '25%' },
+    { key: 'extra', label: '前往', align: 'center', width: '15%' },
+];
 
 export const KeywordDecisionDataArea = ({ node, onGoNext, message, onRefresh }) => {
     const [editingIndex, setEditingIndex] = useState(null);
@@ -32,12 +25,6 @@ export const KeywordDecisionDataArea = ({ node, onGoNext, message, onRefresh }) 
             keywordDecisionID: KeywordDecision?.KWDecisionID,
         }))
     : [];
-  const columns = [
-    { key: 'id', label: '編號', align: 'center', width: '10%' },
-    { key: 'keyword', label: '關鍵字', align: 'center', width: '50%' },
-    { key: 'action', label: '動作', align: 'center', width: '25%' },
-    { key: 'extra', label: '前往', align: 'center', width: '15%' },
-  ];
 
   const handleSubmit = async () => {
     try {
