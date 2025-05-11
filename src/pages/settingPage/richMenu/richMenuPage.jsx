@@ -1,17 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import RichMenuTable from './richMenuTable';
+import { useParams } from 'react-router-dom';
 
 const RichMenuSettingPage = () => {
+  const { channel } = useParams();
   const [richMenus, setRichMenus] = useState([]);
 
+  const fetchRichMenuData = async () => {
+      try {
+        const res = await fetch(`/api/${channel}/richMenus/fetchInfo`);
+        const data = await res.json();
+        const formattedTags = Array.isArray(data)
+          ? data.map(item => ({
+              id: item.RichMenu?.MenuID,
+              name: item.RichMenu?.RichMenuName
+            }))
+          : [];
+        setRichMenus(formattedTags);
+      } catch (err) {
+        console.error('Fetch node info failed:', err);
+      }
+    };
+    
   useEffect(() => {
-    // 模擬獲取數據
-    const fetchedMenus = [
-      { id: 1, name: '圖文選單1' },
-      { id: 2, name: '圖文選單2' },
-    ];
-    setRichMenus(fetchedMenus);
-  }, []);
+    fetchRichMenuData();
+  }, [channel]);
 
   const handleEdit = (id) => {
     console.log(`編輯選單 ${id}`);
@@ -26,6 +39,8 @@ const RichMenuSettingPage = () => {
     <div>
       <RichMenuTable
         richMenus={richMenus}
+        channel={channel}
+        onRefresh={fetchRichMenuData}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />

@@ -1,14 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TableContainer, Table, Button, Input } from '../style';
 
-// 組件
-const TagTable = ({ tags, onAddTag, onDeleteTag, onEditTag }) => {
-  const [newTagName, setNewTagName] = React.useState('');
+const TagTable = ({ tags, channel, onRefresh }) => {
+  const [newTagName, setNewTagName] = useState('');
+  const [editingId, setEditingId] = useState(null);
+  const [editedName, setEditedName] = useState('');
 
-  const handleAddTag = () => {
-    if (newTagName.trim()) {
-      onAddTag(newTagName.trim());
-      setNewTagName('');
+  const handleAddTag = async () => {
+    try {
+      const res = await fetch(`/api/${channel}/tagNodes/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tagName: newTagName })
+      });
+      if (res.ok) {
+        setNewTagName('');
+        onRefresh && onRefresh();
+      } else {
+        const errorText = await res.text();
+        console.error('API 錯誤訊息:', errorText);
+        alert(`建立失敗：\n${errorText}`);
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      alert('建立失敗');
+    }
+  };
+
+  const handleDeleteTag = async (id) => {
+    if (!window.confirm('確定要刪除這筆訊息嗎？')) return;
+    try {
+      const res = await fetch(`/api/${channel}/tagNodes/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tagID: id })
+      });
+      if (res.ok) {
+        onRefresh && onRefresh();
+      } else {
+        const errorText = await res.text();
+        console.error('API 錯誤訊息:', errorText);
+        alert(`刪除失敗：\n${errorText}`);
+      }
+    } catch (err) {
+      console.error('刪除錯誤:', err);
+      alert('刪除失敗');
+    }
+  };
+
+  const handleUpdateTag = async (id, name) => {
+    if (name.trim() === '') return;
+    try {
+      const res = await fetch(`/api/${channel}/tagNodes/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tagID: id, tagName: name })
+      });
+      if (res.ok) {
+        setEditingId(null);
+        setEditedName('');
+        onRefresh && onRefresh();
+      } else {
+        const errorText = await res.text();
+        console.error('更新失敗:', errorText);
+        alert(`更新失敗：\n${errorText}`);
+      }
+    } catch (err) {
+      console.error('更新錯誤:', err);
+      alert('更新失敗');
     }
   };
 
@@ -27,11 +86,29 @@ const TagTable = ({ tags, onAddTag, onDeleteTag, onEditTag }) => {
             tags.map((tag, index) => (
               <tr key={tag.id}>
                 <td>{index + 1}</td>
-                <td onClick={() => onEditTag(tag.id)} style={{ cursor: 'pointer', color: '#1890ff' }}>
-                  {tag.name}
+                <td onClick={() => {
+                  setEditingId(tag.id);
+                  setEditedName(tag.name);
+                }}>
+                  {editingId === tag.id ? (
+                    <Input
+                      value={editedName}
+                      onChange={(e) => setEditedName(e.target.value)}
+                      onBlur={() => handleUpdateTag(tag.id, editedName)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleUpdateTag(tag.id, editedName);
+                        }
+                      }}
+                      autoFocus
+                    />
+                  ) : (
+                    tag.name
+                  )}
                 </td>
                 <td>
-                  <Button onClick={() => onDeleteTag(tag.id)}>刪除</Button>
+                  <Button onClick={() => handleDeleteTag(tag.id)}>刪除</Button>
                 </td>
               </tr>
             ))
@@ -41,7 +118,6 @@ const TagTable = ({ tags, onAddTag, onDeleteTag, onEditTag }) => {
             </tr>
           )}
 
-          {/* 新增新標籤 */}
           <tr>
             <td>New</td>
             <td>
@@ -50,6 +126,12 @@ const TagTable = ({ tags, onAddTag, onDeleteTag, onEditTag }) => {
                 value={newTagName}
                 onChange={(e) => setNewTagName(e.target.value)}
                 placeholder="輸入新標籤"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddTag();
+                  }
+                }}
               />
             </td>
             <td>

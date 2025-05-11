@@ -1,19 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Popup, PopupContent, TextArea, FileInput, TableContainer, Table, Button } from "../style";
 
-const RichMenuTable = ({ richMenus, onEdit, onDelete, onAddNew }) => {
+const RichMenuTable = ({ richMenus, channel, onRefresh, onEdit, onDelete, onAddNew }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [menuName, setMenuName] = useState('');
   const [jsonContent, setJsonContent] = useState('');
   const [imageFile, setImageFile] = useState(null);
+  const [editingMenu, setEditingMenu] = useState(null);
+
+  const handleAddNewMenu = async () => {
+    try {
+      const res = await fetch(`/api/${channel}/richMenus/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ menuName: menuName })
+      });
+      if (res.ok) {
+        setMenuName('');
+        onRefresh && onRefresh();
+      } else {
+        const errorText = await res.text();
+        console.error('API 錯誤訊息:', errorText);
+        alert(`建立失敗：\n${errorText}`);
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      alert('建立失敗');
+    }
+  };
+
+  const handleEditClick = (menu) => {
+    setEditingMenu(menu);
+    setMenuName(menu.name);
+    setJsonContent(menu.json || ''); 
+    setImageFile(null);
+    setShowPopup(true);
+  };
 
   const handlePopupClose = () => {
     setShowPopup(false);
+    setEditingMenu(null);
+    setMenuName('');
+    setJsonContent('');
+    setImageFile(null);
   };
 
-  const handleAddNewMenu = () => {
-    setShowPopup(true);
-  };
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setShowPopup(false);
+        setEditingMenu(null); // 如果你有編輯狀態
+      }
+    };
+  
+    if (showPopup) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+  
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showPopup]);
 
   const handleSaveJson = () => {
     // 處理 JSON 儲存邏輯
@@ -42,11 +89,11 @@ const RichMenuTable = ({ richMenus, onEdit, onDelete, onAddNew }) => {
             richMenus.map((menu, index) => (
               <tr key={menu.id}>
                 <td>{index + 1}</td>
-                <td onClick={() => onEdit(menu.id)} style={{ cursor: 'pointer', color: '#1890ff' }}>
+                <td onClick={() => handleEditClick(menu)} style={{ cursor: 'pointer', color: '#1890ff' }}>
                   {menu.name}
                 </td>
                 <td>
-                  <Button onClick={() => onEdit(menu.id)}>編輯</Button>
+                  <Button onClick={() => handleEditClick(menu)}>編輯</Button>
                 </td>
                 <td>
                   <Button onClick={() => onDelete(menu.id)}>刪除</Button>
@@ -70,7 +117,7 @@ const RichMenuTable = ({ richMenus, onEdit, onDelete, onAddNew }) => {
       </Table>
 
       {/* Popup Form */}
-      {showPopup && (
+      {showPopup && editingMenu && (
         <Popup>
           <PopupContent>
             <label htmlFor="menuName">輸入圖文選單名稱:</label>
@@ -79,8 +126,8 @@ const RichMenuTable = ({ richMenus, onEdit, onDelete, onAddNew }) => {
               id="menuName"
               value={menuName}
               onChange={(e) => setMenuName(e.target.value)}
-              placeholder="Enter name here"
             />
+
             <h3>輸入 JSON 格式</h3>
             <TextArea
               id="jsonContent"
@@ -89,17 +136,14 @@ const RichMenuTable = ({ richMenus, onEdit, onDelete, onAddNew }) => {
               rows="10"
               placeholder="Enter JSON here"
             />
-            <button onClick={handleSaveJson}>儲存 JSON</button>
+
+            <Button onClick={handleSaveJson}>儲存 JSON</Button>
 
             <h3>選擇圖片</h3>
-            <FileInput
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
-            <button onClick={() => console.log('上傳圖片', imageFile)}>上傳圖片</button>
+            <FileInput type="file" accept="image/*" onChange={handleImageUpload} />
+            <Button onClick={() => console.log('上傳圖片', imageFile)}>上傳圖片</Button>
 
-            <button onClick={handlePopupClose}>關閉</button>
+            <Button onClick={handlePopupClose}>關閉</Button>
           </PopupContent>
         </Popup>
       )}

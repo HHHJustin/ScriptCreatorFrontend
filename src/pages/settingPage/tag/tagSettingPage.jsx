@@ -1,34 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TagTable from './tagSettingTable';
+import { useParams } from 'react-router-dom';
 
 const TagSettingPage = () => {
-    const [tags, setTags] = useState([
-        { id: 1, name: '標籤1' },
-        { id: 2, name: '標籤2' },
-        { id: 3, name: '標籤2' },
-        { id: 4, name: '標籤2' },
-    ]);
+    const { channel } = useParams();
+    const [tags, setTags] = useState([]);
 
-    const handleAddTag = (newTag) => {
-        const newId = tags.length + 1;
-        setTags([...tags, { id: newId, name: newTag }]);
-    };
-
-    const handleDeleteTag = (id) => {
-        setTags(tags.filter(tag => tag.id !== id));
-    };
-
-    const handleEditTag = (id) => {
-        console.log('點擊編輯標籤 ID:', id);
-    };
+    const fetchTagData = async () => {
+        try {
+          const res = await fetch(`/api/${channel}/tagNodes/fetchInfo`);
+          const data = await res.json();
+          const formattedTags = Array.isArray(data)
+            ? data.map(item => ({
+                id: item.Tag?.TagID,
+                name: item.Tag?.TagName
+              }))
+            : [];
+          setTags(formattedTags);
+        } catch (err) {
+          console.error('Fetch node info failed:', err);
+        }
+      };
+    
+      useEffect(() => {
+        fetchTagData();
+      }, [channel]);
 
     return (
         <div style={{ padding: '10px' }}>
         <TagTable
             tags={tags}
-            onAddTag={handleAddTag}
-            onDeleteTag={handleDeleteTag}
-            onEditTag={handleEditTag}
+            channel={channel}
+            onRefresh={fetchTagData}
         />
         </div>
     );

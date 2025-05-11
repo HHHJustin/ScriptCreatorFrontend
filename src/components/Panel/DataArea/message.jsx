@@ -9,8 +9,8 @@ import {
 const columns = [
   { key: 'id', label: '編號', align: 'center', width: '15%' },
   { key: 'type', label: '種類', align: 'center', width: '15%' },
-  { key: 'content', label: '內容', align: 'center', width: '60%' },
-  { key: 'action', label: '動作', align: 'center', width: '10%' },
+  { key: 'content', label: '內容', align: 'center', width: '55%' },
+  { key: 'action', label: '動作', align: 'center', width: '15%' },
 ];
 
 

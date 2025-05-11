@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
+/* ======= Overlay & Wrapper ======= */
 export const SettingOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);  /* 黑色半透明 */
+  background: rgba(0, 0, 0, 0.4);
   z-index: 3000;
   display: flex;
   align-items: center;
@@ -24,6 +25,7 @@ export const SettingWrapper = styled.div`
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 `;
 
+/* ======= Tabs ======= */
 export const TabsWrapper = styled.div`
   display: flex;
   justify-content: space-around;
@@ -51,46 +53,48 @@ export const ContentArea = styled.div`
   padding: 20px;
 `;
 
-// 樣式
+/* ======= Table ======= */
 export const TableContainer = styled.div`
-    width: 100%;
-    max-height: 80%;
-    overflow-x: auto;
-    overflow-y: auto;
-    border: 1px solid #000000;
-    border-radius: 8px;
+  width: 100%;
+  max-height: 80%;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid #000;
+  border-radius: 8px;
 `;
 
 export const Table = styled.table`
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
-    th, td {
-      padding: 12px 16px;
-      border-bottom: 1px solid #eee;
-      text-align: center;
-    }
+  th, td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+  }
 
-    caption {
-      font-size: 18px;
-      font-weight: bold;
-      padding: 12px;
-    }
+  caption {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px;
+  }
 `;
 
+/* ======= Inputs & Buttons ======= */
 export const Button = styled.button`
   padding: 6px 12px;
-  background: #ff4d4f;
+  background: #4f92ff; /* 柔和藍色 */
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s ease;
 
   &:hover {
-    background: #d9363e;
+    background: #3c78d8; /* 深一點的藍色 */
   }
 `;
 
@@ -99,28 +103,6 @@ export const Input = styled.input`
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 6px;
-`;
-
-export const Popup = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const PopupContent = styled.div`
-  background: white;
-  padding: 20px;
-  width: 50%;
-  height: 60%;
-  max-width: 90%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
 `;
 
 export const TextArea = styled.textarea`
@@ -135,7 +117,7 @@ export const FileInput = styled.input`
 `;
 
 export const InputWrapper = styled.div`
-  padding: 20px;    
+  padding: 20px;
 `;
 
 export const InputContainer = styled.div`
@@ -143,12 +125,81 @@ export const InputContainer = styled.div`
 `;
 
 export const Label = styled.label`
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
+  text-align: left;
+  padding: 4px 0;
+`;
+
+/* ======= Popup ======= */
+export const Popup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const PopupContent = styled.div`
+  background: #fff;
+  padding: 24px 32px;
+  width: 480px;
+  max-width: 90%;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h3 {
+    margin-top: 12px;
+    font-size: 18px;
     color: #333;
-    margin-bottom: 8px;
-    display: block;
-    text-align: left;  /* 如果您希望标签文字左对齐 */
-    padding: 4px 0;
-`
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #555;
+  }
+
+  input[type='text'] {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  textarea {
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-family: monospace;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  button {
+    margin-top: 6px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    background: #4f92ff;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #3c78d8;
+    }
+  }
+`;
+

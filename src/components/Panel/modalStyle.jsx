@@ -263,3 +263,4 @@ export const EditableTextArea = ({ value, onChange, onBlur, onKeyDown }) => (
     autoFocus
   />
 );
+
