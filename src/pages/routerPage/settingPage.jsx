@@ -15,7 +15,8 @@ const SettingPage = () => {
             <TabButton $active={currentTab === 'tab1'} onClick={() => setCurrentTab('tab1')}>標籤設定</TabButton>
             <TabButton $active={currentTab === 'tab2'} onClick={() => setCurrentTab('tab2')}>圖文選單設定</TabButton>
             <TabButton $active={currentTab === 'tab3'} onClick={() => setCurrentTab('tab3')}>彈性模板設定</TabButton>
-            <TabButton $active={currentTab === 'tab4'} onClick={() => setCurrentTab('tab4')}>LineBot設定</TabButton>
+            <TabButton $active={currentTab === 'tab4'} onClick={() => setCurrentTab('tab4')}>上傳圖片</TabButton>
+            <TabButton $active={currentTab === 'tab5'} onClick={() => setCurrentTab('tab5')}>LineBot設定</TabButton>
           </TabsWrapper>
   
           {/* 顯示內容 */}

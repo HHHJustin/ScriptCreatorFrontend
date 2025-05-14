@@ -8,7 +8,7 @@ const RichMenuSettingPage = () => {
 
   const fetchRichMenuData = async () => {
       try {
-        const res = await fetch(`/api/${channel}/richMenus/fetchInfo`);
+        const res = await fetch(`/api/${channel}/setting/richMenus/fetchInfo`);
         const data = await res.json();
         const formattedTags = Array.isArray(data)
           ? data.map(item => ({

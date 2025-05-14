@@ -8,7 +8,7 @@ const TagSettingPage = () => {
 
     const fetchTagData = async () => {
         try {
-          const res = await fetch(`/api/${channel}/tagNodes/fetchInfo`);
+          const res = await fetch(`/api/${channel}/setting/tagNodes/fetchInfo`);
           const data = await res.json();
           const formattedTags = Array.isArray(data)
             ? data.map(item => ({

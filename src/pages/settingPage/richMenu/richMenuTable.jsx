@@ -5,12 +5,12 @@ const RichMenuTable = ({ richMenus, channel, onRefresh, onEdit, onDelete, onAddN
   const [showPopup, setShowPopup] = useState(false);
   const [menuName, setMenuName] = useState('');
   const [jsonContent, setJsonContent] = useState('');
-  const [imageFile, setImageFile] = useState(null);
+  const [imageFile, setImageFile] = useState('');
   const [editingMenu, setEditingMenu] = useState(null);
 
   const handleAddNewMenu = async () => {
     try {
-      const res = await fetch(`/api/${channel}/richMenus/create`, {
+      const res = await fetch(`/api/${channel}/setting/richMenus/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ menuName: menuName })
@@ -62,9 +62,65 @@ const RichMenuTable = ({ richMenus, channel, onRefresh, onEdit, onDelete, onAddN
     };
   }, [showPopup]);
 
-  const handleSaveJson = () => {
-    // 處理 JSON 儲存邏輯
-    console.log('JSON 儲存:', jsonContent);
+  const handleUpdateRichMenu = async (id, name, json) => {
+    if (name.trim() === '') return;
+    let imageBase64 = '';
+    if (imageFile) {
+      imageBase64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = reader.result.split(',')[1]; // 只取 base64 字串
+          resolve(`${imageFile.name};${base64}`);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(imageFile);
+      });
+    }
+    try {
+      const res = await fetch(`/api/${channel}/setting/richMenus/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          menuID: id,
+          menuName: name,
+          richMenuJson: json,
+          richMenuImage: imageBase64,
+        }),
+      });
+      if (res.ok) {
+        setEditingMenu(null);
+        setShowPopup(false);
+        onRefresh && onRefresh();
+      } else {
+        const errorText = await res.text();
+        console.error('更新失敗:', errorText);
+        alert(`更新失敗：\n${errorText}`);
+      }
+    } catch (err) {
+      console.error('更新錯誤:', err);
+      alert('更新失敗');
+    }
+  };
+
+  const handleDeleteTag = async (id) => {
+    if (!window.confirm('確定要刪除這筆訊息嗎？')) return;
+    try {
+      const res = await fetch(`/api/${channel}/setting/richMenus/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ menuID: id })
+      });
+      if (res.ok) {
+        onRefresh && onRefresh();
+      } else {
+        const errorText = await res.text();
+        console.error('API 錯誤訊息:', errorText);
+        alert(`刪除失敗：\n${errorText}`);
+      }
+    } catch (err) {
+      console.error('刪除錯誤:', err);
+      alert('刪除失敗');
+    }
   };
 
   const handleImageUpload = (event) => {
@@ -96,7 +152,7 @@ const RichMenuTable = ({ richMenus, channel, onRefresh, onEdit, onDelete, onAddN
                   <Button onClick={() => handleEditClick(menu)}>編輯</Button>
                 </td>
                 <td>
-                  <Button onClick={() => onDelete(menu.id)}>刪除</Button>
+                  <Button onClick={() => handleDeleteTag(menu.id)}>刪除</Button>
                 </td>
               </tr>
             ))
@@ -137,12 +193,9 @@ const RichMenuTable = ({ richMenus, channel, onRefresh, onEdit, onDelete, onAddN
               placeholder="Enter JSON here"
             />
 
-            <Button onClick={handleSaveJson}>儲存 JSON</Button>
-
             <h3>選擇圖片</h3>
             <FileInput type="file" accept="image/*" onChange={handleImageUpload} />
-            <Button onClick={() => console.log('上傳圖片', imageFile)}>上傳圖片</Button>
-
+            <Button onClick={() => handleUpdateRichMenu(editingMenu.id, menuName, jsonContent)}> 儲存 </Button>
             <Button onClick={handlePopupClose}>關閉</Button>
           </PopupContent>
         </Popup>

@@ -12,6 +12,8 @@ export const RenderCurrentPage = ({ currentTab }) => {
     case 'tab3':
       return <FlexMessageSettingPage />;
     case 'tab4':
+      return ;
+    case 'tab5':
       return <LineBotSettingPage />;
     default:
       return <div>請選擇一個分頁</div>;

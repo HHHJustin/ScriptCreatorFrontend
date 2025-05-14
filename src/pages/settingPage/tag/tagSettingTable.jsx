@@ -8,7 +8,7 @@ const TagTable = ({ tags, channel, onRefresh }) => {
 
   const handleAddTag = async () => {
     try {
-      const res = await fetch(`/api/${channel}/tagNodes/create`, {
+      const res = await fetch(`/api/${channel}/setting/tagNodes/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tagName: newTagName })
@@ -30,7 +30,7 @@ const TagTable = ({ tags, channel, onRefresh }) => {
   const handleDeleteTag = async (id) => {
     if (!window.confirm('確定要刪除這筆訊息嗎？')) return;
     try {
-      const res = await fetch(`/api/${channel}/tagNodes/delete`, {
+      const res = await fetch(`/api/${channel}/setting/tagNodes/delete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tagID: id })
@@ -51,7 +51,7 @@ const TagTable = ({ tags, channel, onRefresh }) => {
   const handleUpdateTag = async (id, name) => {
     if (name.trim() === '') return;
     try {
-      const res = await fetch(`/api/${channel}/tagNodes/update`, {
+      const res = await fetch(`/api/${channel}/setting/tagNodes/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tagID: id, tagName: name })
