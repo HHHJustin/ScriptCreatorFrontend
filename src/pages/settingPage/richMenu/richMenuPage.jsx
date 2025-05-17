@@ -7,33 +7,24 @@ const RichMenuSettingPage = () => {
   const [richMenus, setRichMenus] = useState([]);
 
   const fetchRichMenuData = async () => {
-      try {
-        const res = await fetch(`/api/${channel}/setting/richMenus/fetchInfo`);
-        const data = await res.json();
-        const formattedTags = Array.isArray(data)
-          ? data.map(item => ({
-              id: item.RichMenu?.MenuID,
-              name: item.RichMenu?.RichMenuName
-            }))
-          : [];
-        setRichMenus(formattedTags);
-      } catch (err) {
-        console.error('Fetch node info failed:', err);
-      }
-    };
+    try {
+      const res = await fetch(`/api/${channel}/setting/richMenus/fetchInfo`);
+      const data = await res.json();
+      const formattedMenus = Array.isArray(data)
+        ? data.map(item => ({
+            id: item.RichMenu?.MenuID,
+            name: item.RichMenu?.RichMenuName
+          }))
+        : [];
+      setRichMenus(formattedMenus);
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
     
   useEffect(() => {
     fetchRichMenuData();
   }, [channel]);
-
-  const handleEdit = (id) => {
-    console.log(`編輯選單 ${id}`);
-  };
-
-  const handleDelete = (id) => {
-    setRichMenus(richMenus.filter((menu) => menu.id !== id));
-    console.log(`刪除選單 ${id}`);
-  };
 
   return (
     <div>
@@ -41,8 +32,6 @@ const RichMenuSettingPage = () => {
         richMenus={richMenus}
         channel={channel}
         onRefresh={fetchRichMenuData}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
       />
     </div>
   );

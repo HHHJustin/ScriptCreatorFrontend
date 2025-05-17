@@ -1,33 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import FlexMessageTable from './flexMessageTable';
+import { useParams } from 'react-router-dom';
 
 const FlexMessageSettingPage = () => {
+  const { channel } = useParams();
   const [flexMessages, setFlexMessages] = useState([]);
 
+  const fetchFlexMessageData = async () => {
+    try {
+      const res = await fetch(`/api/${channel}/setting/flexMessages/fetchInfo`);
+      const data = await res.json();
+      const formattedMessages = Array.isArray(data)
+        ? data.map(item => ({
+            id: item.FlexMessage?.FlexMessageID,
+            name: item.FlexMessage?.DataName
+          }))
+        : [];
+      setFlexMessages(formattedMessages);
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+    
   useEffect(() => {
-    // 模擬獲取數據
-    const fetchedMenus = [
-      { id: 1, name: '彈性模板1' },
-      { id: 2, name: '彈性模板2' },
-    ];
-    setFlexMessages(fetchedMenus);
-  }, []);
-
-  const handleEdit = (id) => {
-    console.log(`編輯 ${id}`);
-  };
-
-  const handleDelete = (id) => {
-    setFlexMessages(flexMessages.filter((message) => message.id !== id));
-    console.log(`刪除 ${id}`);
-  };
+    fetchFlexMessageData();
+  }, [channel]);
 
   return (
     <div>
       <FlexMessageTable
         flexMessages={flexMessages}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
+        channel={channel}
+        onRefresh={fetchFlexMessageData}
       />
     </div>
   );

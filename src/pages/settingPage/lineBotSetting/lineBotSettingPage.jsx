@@ -1,15 +1,33 @@
 import React, { useState } from 'react';
 import { InputContainer, InputWrapper, Label, Input, Button, TableContainer } from '../style';
+import { useParams } from 'react-router-dom';
 
 const LineBotSettingPage = () => {
   const [channelSecret, setChannelSecret] = useState('');
   const [channelToken, setChannelToken] = useState('');
-
-  const handleSubmit = (event) => {
+  const { channel } = useParams();
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent page refresh
-    console.log('Channel Secret:', channelSecret);
-    console.log('Channel Access Token:', channelToken);
-    // You can handle the form submission here, e.g., send data to the server
+    try {
+      const res = await fetch(`/api/${channel}/setting/lineBot`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          channelSecretKey: channelSecret,
+          channelAccessToken: channelToken,
+        }),
+      });
+      if (res.ok) {
+        alert(`更新成功`);
+      } else {
+        const errorText = await res.text();
+        console.error('更新失敗:', errorText);
+        alert(`更新失敗：\n${errorText}`);
+      }
+    } catch (err) {
+      console.error('更新錯誤:', err);
+      alert('更新失敗');
+    }
   };
 
   return (

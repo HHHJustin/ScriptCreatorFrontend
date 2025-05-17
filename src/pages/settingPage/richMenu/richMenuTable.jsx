@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Popup, PopupContent, TextArea, FileInput, TableContainer, Table, Button } from "../style";
 
-const RichMenuTable = ({ richMenus, channel, onRefresh, onEdit, onDelete, onAddNew }) => {
+const RichMenuTable = ({ richMenus, channel, onRefresh }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [menuName, setMenuName] = useState('');
   const [jsonContent, setJsonContent] = useState('');
@@ -102,7 +102,7 @@ const RichMenuTable = ({ richMenus, channel, onRefresh, onEdit, onDelete, onAddN
     }
   };
 
-  const handleDeleteTag = async (id) => {
+  const handleDeleteRichMenu = async (id) => {
     if (!window.confirm('確定要刪除這筆訊息嗎？')) return;
     try {
       const res = await fetch(`/api/${channel}/setting/richMenus/delete`, {
@@ -152,7 +152,7 @@ const RichMenuTable = ({ richMenus, channel, onRefresh, onEdit, onDelete, onAddN
                   <Button onClick={() => handleEditClick(menu)}>編輯</Button>
                 </td>
                 <td>
-                  <Button onClick={() => handleDeleteTag(menu.id)}>刪除</Button>
+                  <Button onClick={() => handleDeleteRichMenu(menu.id)}>刪除</Button>
                 </td>
               </tr>
             ))

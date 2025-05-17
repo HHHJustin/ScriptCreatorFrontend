@@ -1,7 +1,8 @@
+import TagSettingPage from "./tag/tagSettingPage";
+import RichMenuSettingPage from "./richMenu/richMenuPage";
+import UploadImageSettingPage from "./uploadImage/uploadImagePage"
 import FlexMessageSettingPage from "./flexMessage/flexMessagePage";
 import LineBotSettingPage from "./lineBotSetting/lineBotSettingPage";
-import RichMenuSettingPage from "./richMenu/richMenuPage";
-import TagSettingPage from "./tag/tagSettingPage";
 
 export const RenderCurrentPage = ({ currentTab }) => {
   switch (currentTab) {
@@ -10,9 +11,9 @@ export const RenderCurrentPage = ({ currentTab }) => {
     case 'tab2':
       return <RichMenuSettingPage />;
     case 'tab3':
-      return <FlexMessageSettingPage />;
+      return <UploadImageSettingPage />;
     case 'tab4':
-      return ;
+      return <FlexMessageSettingPage />;
     case 'tab5':
       return <LineBotSettingPage />;
     default:
