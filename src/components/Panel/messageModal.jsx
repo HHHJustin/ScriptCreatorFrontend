@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import MessageDataArea from './DataArea/message';
+import MessageDataArea from './dataArea/message';
 import { ModalOverlay, ModalContent, 
 TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
 import { useParams } from 'react-router-dom';

@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
 TopWrapper, GoPreviousNode, BranchGoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
-import KeywordDecisionDataArea from './DataArea/keywordDecision';
+import KeywordDecisionDataArea from './dataArea/keywordDecision';
 import { useParams } from 'react-router-dom';
 
 function KeywordDecisionNodeModal({ node, tags, onClose }) {

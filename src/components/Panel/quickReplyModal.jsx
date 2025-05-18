@@ -2,7 +2,7 @@ import { React, useState, useEffect } from 'react';
 import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
 TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
 import { useParams } from 'react-router-dom';
-import QuickReplyDataArea from './DataArea/quickreply';
+import QuickReplyDataArea from './dataArea/quickreply';
 
 function QuickReplyNodeModal({ node, tags, onClose }) {
   const { channel } = useParams();
@@ -26,6 +26,7 @@ function QuickReplyNodeModal({ node, tags, onClose }) {
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
+  
   if (!node) return null;
   return (
     <ModalOverlay onClick={onClose}>

@@ -6,6 +6,7 @@ import {
   StyledSelect, StyledButton, MediaContainer, MediaFileName
 } from '../modalStyle';
 
+
 const columns = [
   { key: 'id', label: '編號', align: 'center', width: '15%' },
   { key: 'type', label: '種類', align: 'center', width: '15%' },

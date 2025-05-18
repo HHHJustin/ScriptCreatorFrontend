@@ -28,7 +28,7 @@ const QuickReplyDataArea = ({ node, message, onRefresh }) => {
             quickReplyID: QuickReply.QuickReplyID,
         }))
     : [];
-    const handleSubmit = async () => {
+    const handleCreateQuickReply = async () => {
         try {
             const res = await fetch(`/api/${channel}/quickReplies/create`, {
             method: 'POST',
@@ -157,7 +157,7 @@ const QuickReplyDataArea = ({ node, message, onRefresh }) => {
             <CenteredTd>New</CenteredTd>
             <CenteredTd />
             <CenteredTd>
-              <StyledButton onClick={handleSubmit}>建立</StyledButton>
+              <StyledButton onClick={handleCreateQuickReply}>建立</StyledButton>
             </CenteredTd>
             <CenteredTd />
           </Tr>
