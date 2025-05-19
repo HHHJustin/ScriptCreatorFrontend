@@ -1,66 +1,31 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
-TopWrapper, GoPreviousNode, BranchGoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
-
-const DataArea = ({ node, onGoNext }) => {
-  const allData = node.data.content;
-
-  if (!allData || !Array.isArray(allData)) {
-    return <div>沒有資料</div>;
-  }
-
-  const columns = [
-    { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'condition', label: '情形', align: 'center', width: '40%' },
-    { key: 'weight', label: '權重', align: 'center', width: '20%' },
-  ];
-
-  return (
-    <DataAreaWrapper>
-      <Table>
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <Th key={col.key}>
-                {col.label}
-              </Th>
-            ))}
-            <Th></Th> 
-          </tr>
-        </thead>
-        <tbody>
-          {allData.map((item) => (
-            <Tr key={item.id}>
-              {columns.map((col) => (
-                <Td
-                  key={col.key}
-                  style={{
-                    textAlign: col.align,
-                    width: col.width,
-                    whiteSpace: col.key === 'content' ? 'normal' : 'nowrap',
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  {item[col.key]}
-                </Td>
-              ))}
-              <Td style={{ textAlign: 'center' }}>
-                <BranchGoNextNode onClick={() => onGoNext(item.id)}>▶︎</BranchGoNextNode>
-              </Td>
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
-    </DataAreaWrapper>
-  );
-};
+TopWrapper, GoPreviousNode, BranchGoNextNode, NodeTitle, ContentWrapper, 
+TagArea, AddTagInput, Tag } from './modalStyle';
+import RandomDataArea from './dataArea/random';
+import { useParams } from 'react-router-dom';
 
 function RandomNodeModal({ node, tags, onClose }) {
   const [newTag, setNewTag] = useState('');
-
+  const { channel } = useParams();
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
+  const [fetchedNode, setFetchedNode] = useState([]);
+  const fetchNodeDataAgain = async () => {
+    if (!node) return;
+    try {
+      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
+      const data = await res.json();
+      setFetchedNode(data); 
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchNodeDataAgain(); 
+  }, [node, channel]);
   if (!node) return null;
   return (
     <ModalOverlay onClick={onClose}>
@@ -93,8 +58,8 @@ function RandomNodeModal({ node, tags, onClose }) {
               );
             })}
           </TagArea>
-          <DataArea node={node} 
-          onGoNext={(id) => { console.log('你點到了 id:', id); }}/>
+          <RandomDataArea node={node} onGoNext={(id) => { console.log('你點到了 id:', id);}}
+           message={fetchedNode} onRefresh={fetchNodeDataAgain}/>
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>
