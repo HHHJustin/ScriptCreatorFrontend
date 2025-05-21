@@ -58,8 +58,11 @@ function KeywordDecisionNodeModal({ node, tags, onClose }) {
               );
             })}
           </TagArea>
-          <KeywordDecisionDataArea node={node} onGoNext={(id) => { console.log('你點到了 id:', id);}}
-           message={fetchedNode} onRefresh={fetchNodeDataAgain} />
+          <KeywordDecisionDataArea 
+            node={node} 
+            onGoNext={(id) => { console.log('你點到了 id:', id);}}
+            message={fetchedNode} 
+            onRefresh={fetchNodeDataAgain} />
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>

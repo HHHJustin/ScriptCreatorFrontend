@@ -9,7 +9,7 @@ const FlexMessageTable = ({ flexMessages, channel, onRefresh}) => {
 
   const handleAddNewFlexMessage = async () => {
     try {
-      const res = await fetch(`/api/${channel}/setting/flexMessages/create`, {
+      const res = await fetch(`/api/${channel}/setting/flexMessagesEdit/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ flexMessageName: flexMessageName })
@@ -60,7 +60,7 @@ const FlexMessageTable = ({ flexMessages, channel, onRefresh}) => {
   const handleUpdateFlexMessage = async (id, name, json) => {
     if (name.trim() === '') return;
     try {
-      const res = await fetch(`/api/${channel}/setting/flexMessages/update`, {
+      const res = await fetch(`/api/${channel}/setting/flexMessagesEdit/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -87,7 +87,7 @@ const FlexMessageTable = ({ flexMessages, channel, onRefresh}) => {
   const handleDeleteFlexMessage = async (id) => {
     if (!window.confirm('確定要刪除這筆訊息嗎？')) return;
     try {
-      const res = await fetch(`/api/${channel}/setting/flexMessages/delete`, {
+      const res = await fetch(`/api/${channel}/setting/flexMessagesEdit/delete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ flexMessageID: id })

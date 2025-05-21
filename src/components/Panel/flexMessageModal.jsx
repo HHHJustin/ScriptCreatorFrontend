@@ -1,62 +1,56 @@
-import { React, useState } from 'react';
-import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
-TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
-
-const DataArea = ({ node }) => {
-  const allData = node.data.content;
-
-  if (!allData || !Array.isArray(allData)) {
-    return <div>沒有資料</div>;
-  }
-
-  const columns = [
-    { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'message', label: '訊息', align: 'center', width: '80%' },
-  ];
-
-  return (
-    <DataAreaWrapper>
-      <Table>
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <Th key={col.key}>
-                {col.label}
-              </Th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {allData.map((item) => (
-            <Tr key={item.id}>
-              {columns.map((col) => (
-                <Td
-                  key={col.key}
-                  style={{
-                    textAlign: col.align,
-                    width: col.width,
-                    whiteSpace: col.key === 'content' ? 'normal' : 'nowrap', 
-                    wordBreak: 'break-word', 
-                  }}
-                >
-                  {item[col.key]}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
-    </DataAreaWrapper>
-  );
-};
+import { React, useState, useEffect } from 'react';
+import { ModalOverlay, ModalContent, 
+TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, 
+AddTagInput, Tag } from './modalStyle';
+import FlexMessageDataArea from './dataArea/flexMessage';
+import { useParams } from 'react-router-dom';
 
 function FlexMessageNodeModal({ node, tags, onClose }) {
   const [newTag, setNewTag] = useState('');
+  const [fetchedNode, setFetchedNode] = useState([]);
+  const [flexMessages, setFlexMessages] = useState([]);
+  const { channel } = useParams();
+
+  const fetchNodeDataAgain = async () => {
+    if (!node) return;
+    try {
+      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
+      const data = await res.json();
+      setFetchedNode(data); 
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchNodeDataAgain(); 
+  }, [node, channel]);
+
+  const fetchFlexMessageData = async () => {
+    try {
+      const res = await fetch(`/api/${channel}/setting/flexMessagesEdit/fetchInfo`);
+      const data = await res.json();
+      const formattedMessages = Array.isArray(data)
+        ? data.map(item => ({
+            id: item.FlexMessage?.FlexMessageID,
+            name: item.FlexMessage?.DataName
+          }))
+        : [];
+      setFlexMessages(formattedMessages);
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchFlexMessageData();
+  }, [channel]);
 
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
   if (!node) return null;
+
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -89,7 +83,12 @@ function FlexMessageNodeModal({ node, tags, onClose }) {
               );
             })}
           </TagArea>
-          <DataArea node={node} />
+          <FlexMessageDataArea 
+            node={node} 
+            message={fetchedNode}
+            flexMessages={flexMessages}
+            onRefresh={fetchNodeDataAgain}
+          />
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>

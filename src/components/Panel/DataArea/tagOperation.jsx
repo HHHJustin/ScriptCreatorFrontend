@@ -14,7 +14,6 @@ const TagOperationDataArea = ({ node, message, tags, onRefresh }) => {
     const { channel } = useParams();
     const [newType, setNewType] = useState('');
     const currentIDInt = parseInt(node.id, 10);
-    const [selectedTag, setSelectedTag] = useState('');
     const allData = Array.isArray(message)
     ? message
         .filter(item => typeof item.Index === 'number')
@@ -120,7 +119,7 @@ const TagOperationDataArea = ({ node, message, tags, onRefresh }) => {
                         <StyledSelect 
                             value={item.tagName} 
                             onChange={(e) => handleUpdateTag(item, "TagName", e.target.value)}
-                        >
+                          >
                             <option value="">請選擇標籤</option>
                             {tags.map(tag => (
                             <option key={tag.id} value={tag.id}>

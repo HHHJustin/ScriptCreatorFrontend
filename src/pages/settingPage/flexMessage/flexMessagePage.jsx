@@ -8,7 +8,7 @@ const FlexMessageSettingPage = () => {
 
   const fetchFlexMessageData = async () => {
     try {
-      const res = await fetch(`/api/${channel}/setting/flexMessages/fetchInfo`);
+      const res = await fetch(`/api/${channel}/setting/flexMessagesEdit/fetchInfo`);
       const data = await res.json();
       const formattedMessages = Array.isArray(data)
         ? data.map(item => ({

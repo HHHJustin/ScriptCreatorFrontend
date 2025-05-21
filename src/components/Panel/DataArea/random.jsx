@@ -66,7 +66,6 @@ const columns = [
     };
 
     const handleDelete = async (item) => {
-        console.log(item);
         if (!window.confirm('確定要刪除這筆訊息嗎？')) return;
         try {
           const res = await fetch(`/api/${channel}/randoms/delete`, {
