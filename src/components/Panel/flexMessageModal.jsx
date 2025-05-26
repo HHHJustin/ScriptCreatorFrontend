@@ -28,7 +28,7 @@ function FlexMessageNodeModal({ node, tags, onClose }) {
 
   const fetchFlexMessageData = async () => {
     try {
-      const res = await fetch(`/api/${channel}/setting/flexMessagesEdit/fetchInfo`);
+      const res = await fetch(`/api/${channel}/setting/flexMessages/fetchInfo`);
       const data = await res.json();
       const formattedMessages = Array.isArray(data)
         ? data.map(item => ({

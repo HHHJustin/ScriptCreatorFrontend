@@ -8,7 +8,8 @@ export const typeColors = {
   '標籤判定': { bg: '#e3f2fd', border: '#64b5f6', title: '#1565c0', badge: '#bbdefb', button: '#42a5f5' },
   '隨機': { bg: '#fff8e1', border: '#fbc02d', title: '#f57f17', badge: '#ffecb3', button: '#f9a825' },
   '特殊關鍵字': { bg: '#ede7f6', border: '#7e57c2', title: '#5e35b1', badge: '#d1c4e9', button: '#7e57c2' },
-  '圖文選單': { bg: '#efebe9', border: '#8d6e63', title: '#5d4037', badge: '#d7ccc8', button: '#6d4c41' },
+  '開啟選單': { bg: '#efebe9', border: '#8d6e63', title: '#5d4037', badge: '#d7ccc8', button: '#6d4c41' },
+  '關閉選單': { bg: '#efebe9', border: '#8d6e63', title: '#5d4037', badge: '#d7ccc8', button: '#6d4c41' },
   '彈性模板': { bg: '#fce4ec', border: '#f06292', title: '#c2185b', badge: '#f8bbd0', button: '#ec407a' },
 };
   
@@ -21,7 +22,7 @@ export const options = {
   "隨機": "Random",
   "離開群組": "LeaveGroup",
   "彈性模板訊息": "FlexMessage",
-  "開啟圖文選單": "RichMenuON",
-  "關閉圖文選單": "RichMenuOFF",
+  "開啟選單": "RichMenuON",
+  "關閉選單": "RichMenuOFF",
   "入口": "FirstStep"
 };

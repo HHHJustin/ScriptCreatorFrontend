@@ -26,7 +26,9 @@ export const renderModalByType = (node, tagList, handleCloseModal) => {
       return <RandomNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
     case '入口':
       return <FirstStepNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
-    case '圖文選單':
+    case '開啟選單':
+      return <RichMenuNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+    case '關閉選單':
       return <RichMenuNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
     case '特殊關鍵字':
       return <SpecialKeywordDecisionNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;

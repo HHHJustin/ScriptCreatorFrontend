@@ -1,57 +1,49 @@
-import { React, useState } from 'react';
-import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
-TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
-
-const DataArea = ({ node }) => {
-  const allData = node.data.content;
-
-  if (!allData || !Array.isArray(allData)) {
-    return <div>沒有資料</div>;
-  }
-
-  const columns = [
-    { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'menu', label: '圖文選單', align: 'center', width: '80%' },
-  ];
-
-  return (
-    <DataAreaWrapper>
-      <Table>
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <Th key={col.key}>
-                {col.label}
-              </Th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {allData.map((item) => (
-            <Tr key={item.id}>
-              {columns.map((col) => (
-                <Td
-                  key={col.key}
-                  style={{
-                    textAlign: col.align,
-                    width: col.width,
-                    whiteSpace: col.key === 'content' ? 'normal' : 'nowrap', 
-                    wordBreak: 'break-word', 
-                  }}
-                >
-                  {item[col.key]}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
-    </DataAreaWrapper>
-  );
-};
+import { React, useState, useEffect } from 'react';
+import { ModalOverlay, ModalContent, TopWrapper, GoPreviousNode, GoNextNode, 
+  NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
+import { useParams } from 'react-router-dom';
+import RichMenuDataArea from './dataArea/richMenu';
 
 function RichMenuNodeModal({ node, tags, onClose }) {
-  const [newTag, setNewTag] = useState('');
+  const [ newTag, setNewTag] = useState('');
+  const { channel } = useParams();
+  const [fetchedNode, setFetchedNode] = useState([]);
+  const [fetchedRichMenu, setFetchRichMenu] = useState([]);
+
+  const fetchNodeDataAgain = async () => {
+    if (!node) return;
+    try {
+      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
+      const data = await res.json();
+      setFetchedNode(data); 
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchNodeDataAgain(); 
+  }, [node, channel]);
+
+  const fetchRichMenuData = async () => {
+    try {
+      const res = await fetch(`/api/${channel}/setting/richMenus/fetchInfo`);
+      const data = await res.json();
+      const formattedRichMenus = Array.isArray(data)
+        ? data.map(item => ({
+            id: item.RichMenu?.MenuID,
+            name: item.RichMenu?.RichMenuName
+          }))
+        : [];
+        setFetchRichMenu(formattedRichMenus);
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchRichMenuData();
+  }, [channel]);
 
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
@@ -89,7 +81,17 @@ function RichMenuNodeModal({ node, tags, onClose }) {
               );
             })}
           </TagArea>
-          <DataArea node={node} />
+           {/* 根據 node.type 顯示 RichMenuDataArea 或是顯示文字 */}
+           {node.data.type === '關閉選單' ? (
+            <div>無需任何資料</div> // 顯示文字，無需資料
+          ) : (
+            <RichMenuDataArea 
+              node={node} 
+              messages={fetchedNode}
+              richMenus={fetchedRichMenu}
+              onRefresh={fetchNodeDataAgain}
+            />
+          )}
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>

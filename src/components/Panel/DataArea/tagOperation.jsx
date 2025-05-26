@@ -10,12 +10,12 @@ const columns = [
     { key: 'action', label: '動作', align: 'center', width: '20%' },
   ];
 
-const TagOperationDataArea = ({ node, message, tags, onRefresh }) => {
+const TagOperationDataArea = ({ node, messages, tags, onRefresh }) => {
     const { channel } = useParams();
     const [newType, setNewType] = useState('');
     const currentIDInt = parseInt(node.id, 10);
-    const allData = Array.isArray(message)
-    ? message
+    const allData = Array.isArray(messages)
+    ? messages
         .filter(item => typeof item.Index === 'number')
         .map(({ Index, TagOperation }) => ({
             id: Index,
