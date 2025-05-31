@@ -1,60 +1,11 @@
 import { React, useState } from 'react';
 import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
 TopWrapper, GoPreviousNode, BranchGoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
+import { handleTitleChange } from './hook/panel';
+import TagDecisionDataArea from './component/tagDecsionDataArea';
+import SpecialKeywordDecisionDataArea from './component/specialKeywordDecisionDataArea';
 
-const DataArea = ({ node, onGoNext }) => {
-  const allData = node.data.content;
-
-  if (!allData || !Array.isArray(allData)) {
-    return <div>沒有資料</div>;
-  }
-
-  const columns = [
-    { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'keyword', label: '關鍵字', align: 'center', width: '80%' },
-  ];
-
-  return (
-    <DataAreaWrapper>
-      <Table>
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <Th key={col.key}>
-                {col.label}
-              </Th>
-            ))}
-            <Th></Th> 
-          </tr>
-        </thead>
-        <tbody>
-          {allData.map((item) => (
-            <Tr key={item.id}>
-              {columns.map((col) => (
-                <Td
-                  key={col.key}
-                  style={{
-                    textAlign: col.align,
-                    width: col.width,
-                    whiteSpace: col.key === 'content' ? 'normal' : 'nowrap',
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  {item[col.key]}
-                </Td>
-              ))}
-              <Td style={{ textAlign: 'center' }}>
-                <BranchGoNextNode onClick={() => onGoNext(item.id)}>▶︎</BranchGoNextNode>
-              </Td>
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
-    </DataAreaWrapper>
-  );
-};
-
-function SpecialKeywordDecisionNodeModal({ node, tags, onClose }) {
+function SpecialKeywordDecisionNodeModal({ node, tags, onClose, setNodes }) {
   const [newTag, setNewTag] = useState('');
 
   const handleAddTag = (tagText) => {
@@ -66,7 +17,12 @@ function SpecialKeywordDecisionNodeModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
         </TopWrapper>
         <ContentWrapper>
           <TagArea>
@@ -92,7 +48,7 @@ function SpecialKeywordDecisionNodeModal({ node, tags, onClose }) {
               );
             })}
           </TagArea>
-          <DataArea node={node} 
+          <SpecialKeywordDecisionDataArea node={node} 
           onGoNext={(id) => { console.log('你點到了 id:', id); }}/>
         </ContentWrapper>
       </ModalContent>

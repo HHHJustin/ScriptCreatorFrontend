@@ -10,8 +10,6 @@ const columns = [
 
 const RichMenuDataArea = ({ node, messages, richMenus, onRefresh }) => {
     const { channel } = useParams();
-    console.log(richMenus);
-    const [newType, setNewType] = useState('');
     const currentIDInt = parseInt(node.id, 10);
     const allData = Array.isArray(messages)
     ? messages
@@ -31,7 +29,6 @@ const RichMenuDataArea = ({ node, messages, richMenus, onRefresh }) => {
             body: JSON.stringify({ currentNodeID: currentIDInt})
           });
           if (res.ok) {
-            setNewType('');
             onRefresh && onRefresh();
           } else alert('建立失敗');
         } catch (err) {

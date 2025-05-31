@@ -1,10 +1,12 @@
 import { React, useState, useEffect } from 'react';
-import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
+import { ModalOverlay, ModalContent, 
 TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
 import { useParams } from 'react-router-dom';
-import QuickReplyDataArea from './dataArea/quickreply';
+import QuickReplyDataArea from './component/quickReplyDataArea';
+import EditableNodeTitle from './component/editableTitle';
+import { handleTitleChange } from './hook/panel';
 
-function QuickReplyNodeModal({ node, tags, onClose }) {
+function QuickReplyNodeModal({ node, tags, onClose, setNodes }) {
   const { channel } = useParams();
   const [newTag, setNewTag] = useState('');
   const [fetchedNode, setFetchedNode] = useState([]);
@@ -33,7 +35,12 @@ function QuickReplyNodeModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
           <GoNextNode>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>

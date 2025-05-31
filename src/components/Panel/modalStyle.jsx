@@ -264,3 +264,11 @@ export const EditableTextArea = ({ value, onChange, onBlur, onKeyDown }) => (
   />
 );
 
+export const StyledNodeTitleSpan = styled(NodeTitle).attrs({ as: 'span' })``;
+
+export const StyledNodeTitleInput = styled(NodeTitle).attrs({ as: 'input' })`
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+`;

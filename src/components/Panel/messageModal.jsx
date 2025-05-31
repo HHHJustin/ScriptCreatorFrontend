@@ -1,10 +1,13 @@
 import { React, useState, useEffect } from 'react';
-import MessageDataArea from './dataArea/message';
+import MessageDataArea from './component/messageDataArea';
 import { ModalOverlay, ModalContent, 
-TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
+TopWrapper, GoPreviousNode, GoNextNode, 
+NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
 import { useParams } from 'react-router-dom';
+import EditableNodeTitle from './component/editableTitle';
+import { handleTitleChange } from './hook/panel';
 
-function MessageNodeModal({ node, tags, onClose }) {
+function MessageNodeModal({ node, tags, onClose, setNodes}) {
   const { channel } = useParams();
   const [newTag, setNewTag] = useState('');
   const [fetchedNode, setFetchedNode] = useState([]);
@@ -35,7 +38,12 @@ function MessageNodeModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
           <GoNextNode>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>

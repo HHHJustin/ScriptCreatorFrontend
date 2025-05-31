@@ -1,62 +1,15 @@
 import { React, useState } from 'react';
-import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
-TopWrapper, GoPreviousNode, BranchGoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
+import { ModalOverlay, ModalContent, 
+TopWrapper, GoPreviousNode, BranchGoNextNode, NodeTitle, 
+ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
+import EditableNodeTitle from './component/editableTitle';
+import { handleTitleChange } from './hook/panel';
+import TagDecisionDataArea from './component/tagDecsionDataArea';
+import { useParams } from 'react-router-dom';
 
-const DataArea = ({ node, onGoNext }) => {
-  const allData = node.data.content;
-
-  if (!allData || !Array.isArray(allData)) {
-    return <div>沒有資料</div>;
-  }
-
-  const columns = [
-    { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'tags', label: '標籤', align: 'center', width: '80%' },
-  ];
-
-  return (
-    <DataAreaWrapper>
-      <Table>
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <Th key={col.key}>
-                {col.label}
-              </Th>
-            ))}
-            <Th></Th> 
-          </tr>
-        </thead>
-        <tbody>
-          {allData.map((item) => (
-            <Tr key={item.id}>
-              {columns.map((col) => (
-                <Td
-                  key={col.key}
-                  style={{
-                    textAlign: col.align,
-                    width: col.width,
-                    whiteSpace: col.key === 'content' ? 'normal' : 'nowrap',
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  {item[col.key]}
-                </Td>
-              ))}
-              <Td style={{ textAlign: 'center' }}>
-                <BranchGoNextNode onClick={() => onGoNext(item.id)}>▶︎</BranchGoNextNode>
-              </Td>
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
-    </DataAreaWrapper>
-  );
-};
-
-function TagDecisionNodeModal({ node, tags, onClose }) {
+function TagDecisionNodeModal({ node, tags, onClose, setNodes }) {
   const [newTag, setNewTag] = useState('');
-
+  const { channel } = useParams();
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
@@ -66,7 +19,12 @@ function TagDecisionNodeModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
         </TopWrapper>
         <ContentWrapper>
           <TagArea>
@@ -92,7 +50,7 @@ function TagDecisionNodeModal({ node, tags, onClose }) {
               );
             })}
           </TagArea>
-          <DataArea node={node} 
+          <TagDecisionDataArea node={node} 
           onGoNext={(id) => { console.log('你點到了 id:', id); }}/>
         </ContentWrapper>
       </ModalContent>

@@ -2,10 +2,12 @@ import { React, useState, useEffect } from 'react';
 import { ModalOverlay, ModalContent, 
 TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, 
 AddTagInput, Tag } from './modalStyle';
-import FlexMessageDataArea from './dataArea/flexMessage';
+import FlexMessageDataArea from './component/flexMessageDataArea';
 import { useParams } from 'react-router-dom';
+import EditableNodeTitle from './component/editableTitle';
+import { handleTitleChange } from './hook/panel';
 
-function FlexMessageNodeModal({ node, tags, onClose }) {
+function FlexMessageNodeModal({ node, setNodes, tags, onClose }) {
   const [newTag, setNewTag] = useState('');
   const [fetchedNode, setFetchedNode] = useState([]);
   const [flexMessages, setFlexMessages] = useState([]);
@@ -56,7 +58,12 @@ function FlexMessageNodeModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
           <GoNextNode>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>

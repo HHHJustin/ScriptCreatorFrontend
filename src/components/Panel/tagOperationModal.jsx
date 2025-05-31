@@ -2,10 +2,12 @@ import { React, useState, useEffect } from 'react';
 import { ModalOverlay, ModalContent, 
   TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, 
   ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
-import TagOperationDataArea from './dataArea/tagOperation';
+import TagOperationDataArea from './component/tagOperationDataArea';
 import { useParams } from 'react-router-dom';
+import EditableNodeTitle from './component/editableTitle';
+import { handleTitleChange } from './hook/panel';
 
-function TagOperationModal({ node, tags, onClose }) {
+function TagOperationModal({ node, tags, onClose, setNodes }) {
   const { channel } = useParams();
   const [ newTag, setNewTag] = useState('');
   const [fetchedNode, setFetchedNode] = useState([]);
@@ -54,7 +56,12 @@ function TagOperationModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
           <GoNextNode>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>

@@ -2,9 +2,11 @@ import { React, useState, useEffect } from 'react';
 import { ModalOverlay, ModalContent, TopWrapper, GoPreviousNode, GoNextNode, 
   NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
 import { useParams } from 'react-router-dom';
-import RichMenuDataArea from './dataArea/richMenu';
+import RichMenuDataArea from './component/richMenuDataArea';
+import EditableNodeTitle from './component/editableTitle';
+import { handleTitleChange } from './hook/panel';
 
-function RichMenuNodeModal({ node, tags, onClose }) {
+function RichMenuNodeModal({ node, tags, onClose, setNodes }) {
   const [ newTag, setNewTag] = useState('');
   const { channel } = useParams();
   const [fetchedNode, setFetchedNode] = useState([]);
@@ -54,7 +56,12 @@ function RichMenuNodeModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
           <GoNextNode>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>

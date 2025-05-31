@@ -1,6 +1,5 @@
 import { DataAreaWrapper, Table, Th, Tr, Td, EditableTextArea,
     StyledButton, CenteredTd } from "../modalStyle";
-import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 

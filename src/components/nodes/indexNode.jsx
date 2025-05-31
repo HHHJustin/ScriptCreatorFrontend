@@ -39,6 +39,7 @@ function IndexNode({ data, id }) {
         data.onEdit(data, id); 
       }
     } else if (action === '刪除此點') {
+      if (!window.confirm('確定要刪除這點嗎？')) return;
       handleDeleteNode(id, channel, setMenuVisible, setNodes);
     }
   };

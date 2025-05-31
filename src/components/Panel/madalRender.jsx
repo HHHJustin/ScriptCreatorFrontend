@@ -10,32 +10,32 @@ import SpecialKeywordDecisionNodeModal from "./specialKeywordDecisionModal";
 import TagDecisionNodeModal from "./tagDecisionModal";
 import TagOperationModal from "./tagOperationModal";
 
-export const renderModalByType = (node, tagList, handleCloseModal) => {
+export const renderModalByType = (node, setNodes, tagList, handleCloseModal) => {
   if (!node) return null;
 
   switch (node.data.type) {
     case '訊息':
-      return <MessageNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <MessageNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '關鍵字判定':
-      return <KeywordDecisionNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <KeywordDecisionNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '快速回覆':
-      return <QuickReplyNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <QuickReplyNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '彈性模板':
-      return <FlexMessageNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <FlexMessageNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '隨機':
-      return <RandomNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <RandomNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '入口':
-      return <FirstStepNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <FirstStepNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '開啟選單':
-      return <RichMenuNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <RichMenuNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '關閉選單':
-      return <RichMenuNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <RichMenuNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '特殊關鍵字':
-      return <SpecialKeywordDecisionNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <SpecialKeywordDecisionNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '標籤判定':
-      return <TagDecisionNodeModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <TagDecisionNodeModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     case '標籤操作':
-      return <TagOperationModal node={node} tags={tagList} onClose={handleCloseModal} />;
+      return <TagOperationModal node={node} setNodes={setNodes} tags={tagList} onClose={handleCloseModal} />;
     default:
       return null;
   }

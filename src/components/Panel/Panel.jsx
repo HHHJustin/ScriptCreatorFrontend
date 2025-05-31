@@ -45,9 +45,26 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
     setEditNode({ data, id });  
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    if (!editNode) return;
+  
+    try {
+      const res = await fetch(`/api/${channel}/${editNode.id}/title`);
+      const data = await res.json();
+      setNodes((prevNodes) =>
+      prevNodes.map((node) =>
+        node.id === editNode.id
+          ? { ...node, data: { ...node.data, title: data.Title ?? node.data.title } }
+          : node
+      )
+    );
+    } catch (err) {
+      console.error('關閉 modal 時同步 title 失敗', err);
+    }
+  
     setEditNode(null);
   };
+  
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -130,7 +147,7 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
           </MenuItem>
         </ContextMenu>
       )}
-      {renderModalByType(editNode, tagList, handleCloseModal)}
+      {renderModalByType(editNode, setNodes, tagList, handleCloseModal)}
     </div>
   );
 };

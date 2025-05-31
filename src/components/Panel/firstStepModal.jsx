@@ -1,58 +1,13 @@
 import { React, useState } from 'react';
-import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
+import { ModalOverlay, ModalContent, 
 TopWrapper, GoPreviousNode, GoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
+import EditableNodeTitle from './component/editableTitle';
+import { useParams } from 'react-router-dom';
+import { handleTitleChange } from './hook/panel';
 
-const DataArea = ({ node }) => {
-  const allData = node.data.content;
-
-  if (!allData || !Array.isArray(allData)) {
-    return <div>沒有資料</div>;
-  }
-
-  const columns = [
-    { key: 'id', label: '編號', align: 'center', width: '20%' },
-    { key: 'type', label: '種類', align: 'center', width: '80%' },
-  ];
-
-  return (
-    <DataAreaWrapper>
-      <Table>
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <Th key={col.key}>
-                {col.label}
-              </Th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {allData.map((item) => (
-            <Tr key={item.id}>
-              {columns.map((col) => (
-                <Td
-                  key={col.key}
-                  style={{
-                    textAlign: col.align,
-                    width: col.width,
-                    whiteSpace: col.key === 'content' ? 'normal' : 'nowrap', 
-                    wordBreak: 'break-word', 
-                  }}
-                >
-                  {item[col.key]}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
-    </DataAreaWrapper>
-  );
-};
-
-function FirstStepNodeModal({ node, tags, onClose }) {
+function FirstStepNodeModal({ node, setNodes, tags, onClose }) {
   const [newTag, setNewTag] = useState('');
-
+  const { channel } = useParams();
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
@@ -62,7 +17,12 @@ function FirstStepNodeModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
           <GoNextNode>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>
@@ -89,7 +49,6 @@ function FirstStepNodeModal({ node, tags, onClose }) {
               );
             })}
           </TagArea>
-          <DataArea node={node} />
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>

@@ -1,10 +1,12 @@
 import { React, useState, useEffect } from 'react';
-import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
-TopWrapper, GoPreviousNode, BranchGoNextNode, NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
-import KeywordDecisionDataArea from './dataArea/keywordDecision';
+import {  ModalOverlay, ModalContent, 
+TopWrapper, GoPreviousNode,  NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
+import KeywordDecisionDataArea from './component/keywordDecisionDataArea';
 import { useParams } from 'react-router-dom';
+import EditableNodeTitle from './component/editableTitle';
+import { handleTitleChange } from './hook/panel';
 
-function KeywordDecisionNodeModal({ node, tags, onClose }) {
+function KeywordDecisionNodeModal({ node, tags, onClose, setNodes }) {
   const [newTag, setNewTag] = useState('');
   const { channel } = useParams();
   const handleAddTag = (tagText) => {
@@ -32,7 +34,12 @@ function KeywordDecisionNodeModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
         </TopWrapper>
         <ContentWrapper>
           <TagArea>

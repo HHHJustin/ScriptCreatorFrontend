@@ -1,11 +1,14 @@
 import { React, useState, useEffect } from 'react';
-import { DataAreaWrapper, Table, Th, Td, Tr, ModalOverlay, ModalContent, 
-TopWrapper, GoPreviousNode, BranchGoNextNode, NodeTitle, ContentWrapper, 
+import {  ModalOverlay, ModalContent, 
+TopWrapper, GoPreviousNode,
+NodeTitle, ContentWrapper, 
 TagArea, AddTagInput, Tag } from './modalStyle';
-import RandomDataArea from './dataArea/random';
+import RandomDataArea from './component/randomDataArea';
 import { useParams } from 'react-router-dom';
+import EditableNodeTitle from './component/editableTitle';
+import { handleTitleChange } from './hook/panel';
 
-function RandomNodeModal({ node, tags, onClose }) {
+function RandomNodeModal({ node, tags, onClose, setNodes }) {
   const [newTag, setNewTag] = useState('');
   const { channel } = useParams();
   const handleAddTag = (tagText) => {
@@ -32,7 +35,12 @@ function RandomNodeModal({ node, tags, onClose }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
           <GoPreviousNode>◀︎</GoPreviousNode>
-          <NodeTitle>{node.data.title}</NodeTitle>
+          <EditableNodeTitle 
+            node={node}
+            onTitleChange={handleTitleChange} 
+            setNodes={setNodes}
+            channel={channel}
+          />
         </TopWrapper>
         <ContentWrapper>
           <TagArea>
