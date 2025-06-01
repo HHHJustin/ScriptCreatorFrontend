@@ -7,6 +7,7 @@ import RandomDataArea from './component/randomDataArea';
 import { useParams } from 'react-router-dom';
 import EditableNodeTitle from './component/editableTitle';
 import { handleTitleChange } from './hook/panel';
+import useNodeInfo from './hook/useNodeInfo';
 
 function RandomNodeModal({ node, tags, onClose, setNodes }) {
   const [newTag, setNewTag] = useState('');
@@ -14,21 +15,8 @@ function RandomNodeModal({ node, tags, onClose, setNodes }) {
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
-  const [fetchedNode, setFetchedNode] = useState([]);
-  const fetchNodeDataAgain = async () => {
-    if (!node) return;
-    try {
-      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
-      const data = await res.json();
-      setFetchedNode(data); 
-    } catch (err) {
-      console.error('Fetch node info failed:', err);
-    }
-  };
+  const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
-  useEffect(() => {
-    fetchNodeDataAgain(); 
-  }, [node, channel]);
   if (!node) return null;
   return (
     <ModalOverlay onClick={onClose}>
@@ -66,8 +54,11 @@ function RandomNodeModal({ node, tags, onClose, setNodes }) {
               );
             })}
           </TagArea>
-          <RandomDataArea node={node} onGoNext={(id) => { console.log('你點到了 id:', id);}}
-           message={fetchedNode} onRefresh={fetchNodeDataAgain}/>
+          <RandomDataArea 
+            node={node} 
+            onGoNext={(id) => { console.log('你點到了 id:', id);}}
+            message={fetchedNode} 
+            onRefresh={refresh}/>
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>

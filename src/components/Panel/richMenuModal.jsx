@@ -1,31 +1,19 @@
 import { React, useState, useEffect } from 'react';
 import { ModalOverlay, ModalContent, TopWrapper, GoPreviousNode, GoNextNode, 
-  NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
+  ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
 import { useParams } from 'react-router-dom';
 import RichMenuDataArea from './component/richMenuDataArea';
 import EditableNodeTitle from './component/editableTitle';
 import { handleTitleChange } from './hook/panel';
+import useNodeInfo from './hook/useNodeInfo';
 
 function RichMenuNodeModal({ node, tags, onClose, setNodes }) {
   const [ newTag, setNewTag] = useState('');
   const { channel } = useParams();
-  const [fetchedNode, setFetchedNode] = useState([]);
   const [fetchedRichMenu, setFetchRichMenu] = useState([]);
 
-  const fetchNodeDataAgain = async () => {
-    if (!node) return;
-    try {
-      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
-      const data = await res.json();
-      setFetchedNode(data); 
-    } catch (err) {
-      console.error('Fetch node info failed:', err);
-    }
-  };
+  const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
-  useEffect(() => {
-    fetchNodeDataAgain(); 
-  }, [node, channel]);
 
   const fetchRichMenuData = async () => {
     try {
@@ -96,7 +84,7 @@ function RichMenuNodeModal({ node, tags, onClose, setNodes }) {
               node={node} 
               messages={fetchedNode}
               richMenus={fetchedRichMenu}
-              onRefresh={fetchNodeDataAgain}
+              onRefresh={refresh}
             />
           )}
         </ContentWrapper>

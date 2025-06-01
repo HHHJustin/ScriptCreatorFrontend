@@ -77,14 +77,14 @@ const QuickReplyDataArea = ({ node, message, onRefresh }) => {
         setEditingIndex(null);
         setEditingField(null);
         try {
-            const res = await fetch(`/api/${channel}/quickReplies/update`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                quickReplyID: item.quickReplyID,
-                field: field,
-                value: editedContent,
-            })
+                const res = await fetch(`/api/${channel}/quickReplies/update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    quickReplyID: item.quickReplyID,
+                    field: field,
+                    value: editedContent,
+                })
             });
             if (res.ok) onRefresh && onRefresh();
             else alert('更新失敗');

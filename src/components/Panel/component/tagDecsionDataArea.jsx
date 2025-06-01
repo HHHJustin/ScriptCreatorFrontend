@@ -1,17 +1,43 @@
-import { DataAreaWrapper, Th, Tr, Td, BranchGoNextNode } from "../modalStyle";
+import { DataAreaWrapper, Th, Tr, Td, BranchGoNextNode, Table,
+  CenteredTd, StyledButton
+} from "../modalStyle";
+import { useParams } from "react-router-dom";
 
 const columns = [
   { key: 'id', label: '編號', align: 'center', width: '20%' },
-  { key: 'tags', label: '標籤', align: 'center', width: '80%' },
+  { key: 'tags', label: '標籤', align: 'center', width: '40%' },
+  { key: 'action', label: '動作', align: 'center', width: '25%' },
+  { key: 'extra', label: '前往', align: 'center', width: '15%' },
 ];
 
-const TagDecisionDataArea = ({ node, onGoNext }) => {
-    const allData = node.data.content;
-  
-    if (!allData || !Array.isArray(allData)) {
-      return <div>沒有資料</div>;
-    }
-
+const TagDecisionDataArea = ({ node, messages, tags, onRefresh }) => {
+    console.log(messages);
+    const allData = Array.isArray(messages)
+    ? messages
+        .filter(item => typeof item.Index === 'number')
+        .map(({ Index, TagOperation }) => ({
+            id: Index,
+            tagName: TagOperation?.TagName || '—',
+            operationType: TagOperation.OperationType || '—',
+            tagOperationID: TagOperation.TagOperationID,
+        }))
+    : [];
+    const { channel } = useParams();
+    const currentIDInt = parseInt(node.id, 10);
+    const handleSubmit = async () => {
+      try {
+        const res = await fetch(`/api/${channel}/tagDecisions/create`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentNodeID: currentIDInt })
+        });
+        if (res.ok) onRefresh && onRefresh();
+        else alert('建立失敗');
+      } catch (err) {
+        console.error('Error:', err);
+        alert('建立失敗');
+      }
+    };
     return (
       <DataAreaWrapper>
         <Table>
@@ -22,7 +48,6 @@ const TagDecisionDataArea = ({ node, onGoNext }) => {
                   {col.label}
                 </Th>
               ))}
-              <Th></Th> 
             </tr>
           </thead>
           <tbody>
@@ -46,6 +71,14 @@ const TagDecisionDataArea = ({ node, onGoNext }) => {
                 </Td>
               </Tr>
             ))}
+             <Tr>
+              <CenteredTd>New</CenteredTd>
+              <CenteredTd />
+              <CenteredTd>
+                <StyledButton onClick={handleSubmit}>建立</StyledButton>
+              </CenteredTd>
+              <CenteredTd />
+            </Tr>
           </tbody>
         </Table>
       </DataAreaWrapper>

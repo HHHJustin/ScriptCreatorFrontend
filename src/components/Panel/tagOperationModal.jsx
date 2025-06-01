@@ -6,29 +6,16 @@ import TagOperationDataArea from './component/tagOperationDataArea';
 import { useParams } from 'react-router-dom';
 import EditableNodeTitle from './component/editableTitle';
 import { handleTitleChange } from './hook/panel';
+import useNodeInfo from './hook/useNodeInfo';
 
 function TagOperationModal({ node, tags, onClose, setNodes }) {
   const { channel } = useParams();
   const [ newTag, setNewTag] = useState('');
-  const [fetchedNode, setFetchedNode] = useState([]);
   const [fetchedTag, setFetchTag] = useState([]);
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
-  const fetchNodeDataAgain = async () => {
-    if (!node) return;
-    try {
-      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
-      const data = await res.json();
-      setFetchedNode(data); 
-    } catch (err) {
-      console.error('Fetch node info failed:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchNodeDataAgain();
-  }, [node, channel]);
+  const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
   const fetchTagData = async () => {
     try {
@@ -92,7 +79,7 @@ function TagOperationModal({ node, tags, onClose, setNodes }) {
             node={node}
             message={fetchedNode}
             tags={fetchedTag}
-            onRefresh={fetchNodeDataAgain} 
+            onRefresh={refresh} 
           />
         </ContentWrapper>
       </ModalContent>

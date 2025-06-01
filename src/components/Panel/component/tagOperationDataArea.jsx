@@ -108,13 +108,12 @@ const TagOperationDataArea = ({ node, messages, tags, onRefresh }) => {
                     <CenteredTd>
                         <StyledSelect 
                             value={item.operationType}
-                            onChange={(e) => handleUpdateTag(item, "OperationType", e.target.value)}
-                        >
+                            onChange={(e) => handleUpdateTag(item, "OperationType", e.target.value)}>
                             <option value="">請選擇操作</option>
                             <option value="Add">新增</option>
                             <option value="Remove">刪除</option>
                         </StyledSelect>
-                        </CenteredTd>
+                      </CenteredTd>
                     <CenteredTd>
                         <StyledSelect 
                             value={item.tagName} 

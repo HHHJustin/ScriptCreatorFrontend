@@ -17,6 +17,7 @@ export const options = {
   "訊息": "Message",
   "快速回覆": "QuickReply",
   "關鍵字判別": "KeywordDecision",
+  "特殊關鍵字": "SpecialKeywordDecision",
   "標籤判別": "TagDecision",
   "標籤操作": "TagOperation",
   "隨機": "Random",

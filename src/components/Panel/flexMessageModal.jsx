@@ -6,27 +6,13 @@ import FlexMessageDataArea from './component/flexMessageDataArea';
 import { useParams } from 'react-router-dom';
 import EditableNodeTitle from './component/editableTitle';
 import { handleTitleChange } from './hook/panel';
+import useNodeInfo from './hook/useNodeInfo';
 
 function FlexMessageNodeModal({ node, setNodes, tags, onClose }) {
   const [newTag, setNewTag] = useState('');
-  const [fetchedNode, setFetchedNode] = useState([]);
   const [flexMessages, setFlexMessages] = useState([]);
   const { channel } = useParams();
-
-  const fetchNodeDataAgain = async () => {
-    if (!node) return;
-    try {
-      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
-      const data = await res.json();
-      setFetchedNode(data); 
-    } catch (err) {
-      console.error('Fetch node info failed:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchNodeDataAgain(); 
-  }, [node, channel]);
+  const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
   const fetchFlexMessageData = async () => {
     try {
@@ -94,7 +80,7 @@ function FlexMessageNodeModal({ node, setNodes, tags, onClose }) {
             node={node} 
             message={fetchedNode}
             flexMessages={flexMessages}
-            onRefresh={fetchNodeDataAgain}
+            onRefresh={refresh}
           />
         </ContentWrapper>
       </ModalContent>

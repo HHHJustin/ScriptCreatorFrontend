@@ -5,26 +5,13 @@ import { useParams } from 'react-router-dom';
 import QuickReplyDataArea from './component/quickReplyDataArea';
 import EditableNodeTitle from './component/editableTitle';
 import { handleTitleChange } from './hook/panel';
+import useNodeInfo from './hook/useNodeInfo';
 
 function QuickReplyNodeModal({ node, tags, onClose, setNodes }) {
   const { channel } = useParams();
   const [newTag, setNewTag] = useState('');
-  const [fetchedNode, setFetchedNode] = useState([]);
+  const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
-  const fetchNodeDataAgain = async () => {
-    if (!node) return;
-    try {
-      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
-      const data = await res.json();
-      setFetchedNode(data); 
-    } catch (err) {
-      console.error('Fetch node info failed:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchNodeDataAgain();
-  }, [node, channel]);
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
@@ -70,7 +57,7 @@ function QuickReplyNodeModal({ node, tags, onClose, setNodes }) {
           <QuickReplyDataArea 
             node={node}
             message={fetchedNode}
-            onRefresh={fetchNodeDataAgain} 
+            onRefresh={refresh} 
           />
         </ContentWrapper>
       </ModalContent>

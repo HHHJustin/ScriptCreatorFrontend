@@ -5,6 +5,7 @@ import KeywordDecisionDataArea from './component/keywordDecisionDataArea';
 import { useParams } from 'react-router-dom';
 import EditableNodeTitle from './component/editableTitle';
 import { handleTitleChange } from './hook/panel';
+import useNodeInfo from './hook/useNodeInfo';
 
 function KeywordDecisionNodeModal({ node, tags, onClose, setNodes }) {
   const [newTag, setNewTag] = useState('');
@@ -12,21 +13,7 @@ function KeywordDecisionNodeModal({ node, tags, onClose, setNodes }) {
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
-  const [fetchedNode, setFetchedNode] = useState([]);
-  const fetchNodeDataAgain = async () => {
-    if (!node) return;
-    try {
-      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
-      const data = await res.json();
-      setFetchedNode(data); 
-    } catch (err) {
-      console.error('Fetch node info failed:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchNodeDataAgain(); 
-  }, [node, channel]);
+  const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
   if (!node) return null;
   return (
@@ -69,7 +56,7 @@ function KeywordDecisionNodeModal({ node, tags, onClose, setNodes }) {
             node={node} 
             onGoNext={(id) => { console.log('你點到了 id:', id);}}
             message={fetchedNode} 
-            onRefresh={fetchNodeDataAgain} />
+            onRefresh={refresh} />
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>

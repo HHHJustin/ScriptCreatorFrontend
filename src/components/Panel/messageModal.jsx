@@ -6,30 +6,16 @@ NodeTitle, ContentWrapper, TagArea, AddTagInput, Tag } from './modalStyle';
 import { useParams } from 'react-router-dom';
 import EditableNodeTitle from './component/editableTitle';
 import { handleTitleChange } from './hook/panel';
+import useNodeInfo from './hook/useNodeInfo';
 
 function MessageNodeModal({ node, tags, onClose, setNodes}) {
   const { channel } = useParams();
   const [newTag, setNewTag] = useState('');
-  const [fetchedNode, setFetchedNode] = useState([]);
-
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
 
-  const fetchNodeDataAgain = async () => {
-    if (!node) return;
-    try {
-      const res = await fetch(`/api/${channel}/${node.id}/fetchInfo`);
-      const data = await res.json();
-      setFetchedNode(data); 
-    } catch (err) {
-      console.error('Fetch node info failed:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchNodeDataAgain();
-  }, [node, channel]);
+  const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
   if (!node) return null;
 
@@ -73,7 +59,7 @@ function MessageNodeModal({ node, tags, onClose, setNodes}) {
           <MessageDataArea
             node={node}
             message={fetchedNode}
-            onRefresh={fetchNodeDataAgain}
+            onRefresh={refresh}
           />
         </ContentWrapper>
       </ModalContent>

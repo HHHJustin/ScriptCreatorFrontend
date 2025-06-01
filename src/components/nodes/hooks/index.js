@@ -68,6 +68,8 @@ export const navigateByNodeType = (type, navigate) => {
     case '彈性模板':
       navigate('/flexmessage');
       break;
+    case '特殊關鍵字':
+      navigate('/specialKeyword');
     default:
       console.warn('未知類型，無法導航：', type);
   }
