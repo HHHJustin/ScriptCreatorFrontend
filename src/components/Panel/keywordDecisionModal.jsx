@@ -10,9 +10,11 @@ import useNodeInfo from './hook/useNodeInfo';
 function KeywordDecisionNodeModal({ node, tags, onClose, setNodes }) {
   const [newTag, setNewTag] = useState('');
   const { channel } = useParams();
+  
   const handleAddTag = (tagText) => {
     console.log('新增標籤：', tagText);
   };
+
   const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
   if (!node) return null;
@@ -56,7 +58,8 @@ function KeywordDecisionNodeModal({ node, tags, onClose, setNodes }) {
             node={node} 
             onGoNext={(id) => { console.log('你點到了 id:', id);}}
             message={fetchedNode} 
-            onRefresh={refresh} />
+            onRefresh={refresh} 
+          />
         </ContentWrapper>
       </ModalContent>
     </ModalOverlay>

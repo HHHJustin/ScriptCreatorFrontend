@@ -12,11 +12,13 @@ export default function useNodeInfo(node, channel) {
     } catch (err) {
       console.error('❌ Fetch node info failed:', err);
     }
-  }, [node, channel]);
+  }, [node?.id, channel]); // ✅ 用 id 而非整個 node
 
   useEffect(() => {
-    fetchNodeData();
-  }, [fetchNodeData]);
+    if (node && channel) {
+      fetchNodeData();
+    }
+  }, [node?.id, channel]);
 
   return { fetchedNode, refresh: fetchNodeData };
 }
