@@ -24,9 +24,22 @@ const typeComponentMap = {
 };
 
 
-function ContentRenderer({ type, messages }) {
+function ContentRenderer({ type, messages, tags, richMenus, flexMessages }) {
   const Component = typeComponentMap[type];
   if (!Component || !messages || messages.length === 0) return null;
+
+  // 特例：標籤判定需要 tags
+  if (type === '標籤判定') {
+    return <Component messages={messages} tags={tags} />;
+  }
+
+  if (type === '開啟選單') {
+    return <Component messages={messages} richMenus={richMenus} />;
+  }
+
+  if (type === '彈性模板') {
+    return <Component messages={messages} flexMessages={flexMessages} />;
+  }
   return <Component messages={messages} />;
 }
 

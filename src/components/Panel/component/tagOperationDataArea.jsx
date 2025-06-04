@@ -12,7 +12,6 @@ const columns = [
 
 const TagOperationDataArea = ({ node, messages, tags, onRefresh }) => {
     const { channel } = useParams();
-    const [newType, setNewType] = useState('');
     const currentIDInt = parseInt(node.id, 10);
     const allData = Array.isArray(messages)
     ? messages
@@ -25,15 +24,13 @@ const TagOperationDataArea = ({ node, messages, tags, onRefresh }) => {
         }))
     : [];
     const handleSubmit = async () => {
-        if (!newType) return alert('請選擇訊息種類');
         try {
           const res = await fetch(`/api/${channel}/tagOperations/create`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ currentNodeID: currentIDInt, Type: newType })
+            body: JSON.stringify({ currentNodeID: currentIDInt })
           });
           if (res.ok) {
-            setNewType('');
             onRefresh && onRefresh();
           } else alert('建立失敗');
         } catch (err) {
@@ -134,13 +131,7 @@ const TagOperationDataArea = ({ node, messages, tags, onRefresh }) => {
             ))}
             <Tr>
                 <CenteredTd>New</CenteredTd>
-                <CenteredTd>
-                <StyledSelect value={newType} onChange={(e) => setNewType(e.target.value)}>
-                    <option value=""> - </option>
-                    <option value="Add">新增</option>
-                    <option value="Remove">刪除</option>
-                </StyledSelect>
-                </CenteredTd>
+                <CenteredTd/>
                 <CenteredTd />
                 <CenteredTd>
                 <StyledButton onClick={handleSubmit}>建立</StyledButton>

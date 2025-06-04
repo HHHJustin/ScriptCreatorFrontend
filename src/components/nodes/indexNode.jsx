@@ -15,6 +15,9 @@ function IndexNode({ data, id }) {
   const menuRef = useRef(null); 
   const { setNodes } = useReactFlow();
   const { channel } = useParams(); 
+  const [fetchedTag, setFetchTag] = useState([]);
+  const [fetchedRichMenu, setFetchRichMenu] = useState([]);
+  const [fetchedFlexMessage, setFetchFlexMessage] = useState([]);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -60,6 +63,58 @@ function IndexNode({ data, id }) {
     setMenuVisible(true);
     setMenuPosition({ x, y });
   };
+
+  const fetchTagData = async () => {
+    try {
+      const res = await fetch(`/api/${channel}/setting/tagNodes/fetchInfo`);
+      const data = await res.json();
+      const formattedTags = Array.isArray(data)
+        ? data.map(item => ({
+            id: item.Tag?.TagID,
+            name: item.Tag?.TagName
+          }))
+        : [];
+        setFetchTag(formattedTags);
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+  const fetchRichMenuData = async () => {
+    try {
+      const res = await fetch(`/api/${channel}/setting/richMenus/fetchInfo`);
+      const data = await res.json();
+      const formattedRichMenus = Array.isArray(data)
+        ? data.map(item => ({
+            id: item.RichMenu?.MenuID,
+            name: item.RichMenu?.RichMenuName
+          }))
+        : [];
+        setFetchRichMenu(formattedRichMenus);
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+  const fetchFlexMessageData = async () => {
+    try {
+      const res = await fetch(`/api/${channel}/setting/flexMessages/fetchInfo`);
+      const data = await res.json();
+      const formattedMessages = Array.isArray(data)
+        ? data.map(item => ({
+            id: item.FlexMessage?.FlexMessageID,
+            name: item.FlexMessage?.DataName
+          }))
+        : [];
+        setFetchFlexMessage(formattedMessages);
+    } catch (err) {
+      console.error('Fetch node info failed:', err);
+    }
+  };
+  useEffect(() => {
+    fetchTagData();
+    fetchRichMenuData();
+    fetchFlexMessageData();
+  }, [channel]);
+
   return (
     <>
       <Wrapper>
@@ -85,7 +140,7 @@ function IndexNode({ data, id }) {
           />
         </NodeWrapper>
         <ContentWrapper>
-          {messages && <ContentRenderer type={data.type} messages={messages} />}
+          {messages && <ContentRenderer type={data.type} messages={messages} tags={fetchedTag} richMenus={fetchedRichMenu} flexMessages={fetchedFlexMessage}/>}
         </ContentWrapper>
         {data.type && data.type !== '入口' && data.type !== '離開群組' && (
           <TriangleButton onClick={handleTriangleClick} type={data.type}>

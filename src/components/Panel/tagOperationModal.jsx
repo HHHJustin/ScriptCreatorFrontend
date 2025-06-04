@@ -77,7 +77,7 @@ function TagOperationModal({ node, tags, onClose, setNodes }) {
           </TagArea>
           <TagOperationDataArea 
             node={node}
-            message={fetchedNode}
+            messages={fetchedNode}
             tags={fetchedTag}
             onRefresh={refresh} 
           />

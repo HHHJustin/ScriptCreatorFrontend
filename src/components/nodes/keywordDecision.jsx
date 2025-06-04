@@ -2,7 +2,7 @@ import { Handle, Position } from 'reactflow';
 import { Panel, Container } from './nodeStyle';
 
 function KeywordDecisionNode({ messages }) {
-  const keywordDecisions = messages?.KeywordDesisions ?? [];
+  const keywordDecisions = messages?.KeywordDecisions ?? [];
   return (
     <Container>
       {keywordDecisions.map((msg) => (
@@ -23,7 +23,6 @@ function KeywordDecisionNode({ messages }) {
               borderRadius: '50%',
             }}
           />
-        
         </Panel>
       ))}
        {messages.Else && (

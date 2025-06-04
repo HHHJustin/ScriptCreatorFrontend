@@ -2,7 +2,6 @@ import { Panel } from './nodeStyle';
 
 function MessageNode({ messages }) {
   if (!messages || messages.length === 0) return null;
-  
   return (
     <>
       {messages.map((msgWrapper, index) => {

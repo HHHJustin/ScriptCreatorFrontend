@@ -6,27 +6,30 @@ function RandomNode({ messages }) {
 
   return (
     <Container>
-      {messages.map((msg) => (
-        <Panel key={msg.id}>
-            <div className="title">{msg.condition}</div>
-            <div className="text">{msg.weight}</div>
-          <Handle
-            type="source"
-            id={msg.id}
-            position={Position.Right}
-            style={{
-              position: 'absolute',
-              top: '50%',
-              right: -6,
-              transform: 'translateY(-50%)',
-              background: '#fbc02d',
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-            }}
-          />
-        </Panel>
-      ))}
+      {messages.map((msg, index) => {
+        const random = msg.Random;
+        return (
+          <Panel key={random.RandomID || index}>
+            <div className="type">{random.Condition}</div>
+            <div className="content">權重: {random.Weight}</div>
+            <Handle
+              type="source"
+              id={`${random.RandomID}`}
+              position={Position.Right}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: -6,
+                transform: 'translateY(-50%)',
+                background: '#fbc02d',
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+              }}
+            />
+          </Panel>
+        );
+      })}
     </Container>
   );
 }
