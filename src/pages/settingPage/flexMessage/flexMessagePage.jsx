@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FlexMessageTable from './flexMessageTable';
 import { useParams } from 'react-router-dom';
+import BackButton from '../backbutton';
 
 const FlexMessageSettingPage = () => {
   const { channel } = useParams();
@@ -33,6 +34,7 @@ const FlexMessageSettingPage = () => {
         channel={channel}
         onRefresh={fetchFlexMessageData}
       />
+      <BackButton />
     </div>
   );
 };

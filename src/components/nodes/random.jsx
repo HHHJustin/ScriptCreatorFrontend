@@ -14,7 +14,7 @@ function RandomNode({ messages }) {
             <div className="content">權重: {random.Weight}</div>
             <Handle
               type="source"
-              id={`${random.RandomID}`}
+              id={`random-${random.RandomID}`}
               position={Position.Right}
               style={{
                 position: 'absolute',

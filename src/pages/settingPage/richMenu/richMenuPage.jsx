@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import RichMenuTable from './richMenuTable';
 import { useParams } from 'react-router-dom';
+import BackButton from '../backbutton';
 
 const RichMenuSettingPage = () => {
   const { channel } = useParams();
@@ -33,6 +34,7 @@ const RichMenuSettingPage = () => {
         channel={channel}
         onRefresh={fetchRichMenuData}
       />
+      <BackButton />
     </div>
   );
 };

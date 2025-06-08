@@ -3,6 +3,7 @@ import { Panel, Container } from './nodeStyle';
 
 function KeywordDecisionNode({ messages }) {
   const keywordDecisions = messages?.KeywordDecisions ?? [];
+
   return (
     <Container>
       {keywordDecisions.map((msg) => (

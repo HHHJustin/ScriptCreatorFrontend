@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InputContainer, InputWrapper, Label, Input, Button, TableContainer } from '../style';
 import { useParams } from 'react-router-dom';
+import BackButton from '../backbutton';
 
 const LineBotSettingPage = () => {
   const [channelSecret, setChannelSecret] = useState('');
@@ -31,6 +32,7 @@ const LineBotSettingPage = () => {
   };
 
   return (
+    <>
     <TableContainer>
       <form id="configForm" onSubmit={handleSubmit}>
         <InputWrapper>
@@ -62,6 +64,8 @@ const LineBotSettingPage = () => {
         </InputWrapper>
       </form>
     </TableContainer>
+    <BackButton />
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import { addEdge } from 'reactflow';
+import { useCallback } from 'react';
 
 export const fetchGraphData = async (channel, setNodes, setEdges) => {
   try {
@@ -15,12 +16,12 @@ export const fetchGraphData = async (channel, setNodes, setEdges) => {
       },
       style: { zIndex: 1 },
     }));
-
+    
     const newEdges = data.links.map(link => ({
       id: `e${link.from}-${link.to}`,
       source: String(link.from),
       target: String(link.to),
-      sourceHandle: link.sourceFrom ? `keyword-${link.sourceFrom}` : undefined,
+      sourceHandle: link.sourceFrom ? `${link.sourceFrom}` : undefined,
       type: 'customEdge',
     }));
 
@@ -29,6 +30,12 @@ export const fetchGraphData = async (channel, setNodes, setEdges) => {
   } catch (err) {
     console.error('Failed to fetch graph data:', err);
   }
+};
+
+export const useOnRefreshGraph = (channel, setNodes, setEdges) => {
+  return useCallback(() => {
+    fetchGraphData(channel, setNodes, setEdges);
+  }, [channel, setNodes, setEdges]);
 };
 
 export const updateNodeLocation = async (node, channel) => {

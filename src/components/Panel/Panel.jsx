@@ -7,26 +7,26 @@ import { options } from '../nodes/indexTypeData';
 import { renderModalByType } from './madalRender';
 import { handleCreateNodeClick } from './hook/panel';
 import { useParams, useNavigate } from 'react-router-dom';
-
-
+import { useOnRefreshGraph } from '../../pages/routerPage/hooks/homepage';
 
 const Panel = ({ nodes, setNodes, onNodesChange, edges, 
   setEdges, onConnect, setBarMenuOpen, 
   nodeTypes, edgeTypes, viewport, setViewport, tagList }) => {
   const [selectedNodes, setSelectedNodes] = useState([]);
-  const [menuVisible, setMenuVisible] = useState(false);
+  // const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [panelMenuVisible, setPanelMenuVisible] = useState(false);
   const [panelMenuPosition, setPanelMenuPosition] = useState({ x: 0, y: 0 });
   const [editNode, setEditNode] = useState(null); 
   const { screenToFlowPosition } = useReactFlow();
   const navigate = useNavigate();
+
   const handlePaneRightClick = (e) => {
     e.preventDefault();
     const pos = screenToFlowPosition({ x: e.clientX, y: e.clientY });
     setPanelMenuPosition(pos); 
     setBarMenuOpen(false);
-    setMenuVisible(false);
+    // setMenuVisible(false);
     setPanelMenuVisible(true);
     setPanelMenuPosition({ x: e.clientX, y: e.clientY });
   };
@@ -36,7 +36,7 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
     e.preventDefault();
     if (selectedNodes.length > 0) {
       setPanelMenuVisible(false);
-      setMenuVisible(true);
+      // setMenuVisible(true);
       setMenuPosition({ x: e.clientX, y: e.clientY });
     }
   };
@@ -82,6 +82,8 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
     };
   }, []);
     const { channel } = useParams();
+    const onRefreshGraph = useOnRefreshGraph(channel, setNodes, setEdges);
+
   return (
     <div style={{ width: '100%', height: '100%' }} onContextMenu={handleContextMenu}>
       <ReactFlow
@@ -92,7 +94,15 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
             onEdit: handleEditNode,  
           }
         }))}
-        edges={edges}
+        edges={edges.map(edge => ({
+          ...edge,
+          data: {
+            ...edge.data,
+            sourceHandle: edge.sourceHandle, 
+            setEdges,
+            onRefreshGraph,
+          },
+        }))}
         onNodesChange={onNodesChange}
         onEdgesChange={(changes) => setEdges((eds) => applyEdgeChanges(changes, eds))}
         onConnect={onConnect}
@@ -106,14 +116,14 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
         selectionKeyCode="Shift"
         onSelectionChange={(e) => setSelectedNodes(e.nodes || [])}
         onMove={() => {
-          setMenuVisible(false);
+          // setMenuVisible(false);
           setPanelMenuVisible(false);
         }}
         onMoveEnd={(event, transform) => {
           setViewport(transform);
         }}
         onPaneClick={() => {
-          setMenuVisible(false);
+          // setMenuVisible(false);
           setPanelMenuVisible(false);
           setBarMenuOpen(false);
         }}
@@ -121,13 +131,13 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
       >
         <Background color="#ddd" gap={20} size={1} variant="lines" />
       </ReactFlow>
-
+{/* 
       {menuVisible && (
         <SelectBoxMenuWrapper style={{ top: menuPosition.y, left: menuPosition.x }}>
           <SelectBoxMenuItem onClick={() => console.log('刪除')}>刪除這些點</SelectBoxMenuItem>
           <SelectBoxMenuItem onClick={() => console.log('複製')}>複製這些點</SelectBoxMenuItem>
         </SelectBoxMenuWrapper>
-      )}
+      )} */}
 
       {panelMenuVisible && (
         <ContextMenu $x={panelMenuPosition.x} $y={panelMenuPosition.y}>

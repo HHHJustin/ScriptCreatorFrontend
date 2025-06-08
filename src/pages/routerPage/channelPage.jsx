@@ -2,16 +2,16 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TableContainer, Table, TableHeader, TableRow, TableCell, Button, FloatingButton} from './style'; // 引入样式
 
-const ChannelPage = ({ channels }) => {
+const ChannelPage = ({ channels, loading }) => {
   const navigate = useNavigate();
 
   const handleGoToChannel = (channelID) => {
-    navigate(`/home`);  // 页面跳转
+    navigate(`/${channelID}/home`);  // 页面跳转
   };
 
   return (
     <TableContainer>
-      <Table>
+       <Table>
         <thead>
           <TableRow>
             <TableHeader>編號</TableHeader>
@@ -20,11 +20,15 @@ const ChannelPage = ({ channels }) => {
           </TableRow>
         </thead>
         <tbody>
-          {channels.length > 0 ? (
+          {loading ? (
+            <TableRow>
+              <TableCell colSpan="3">載入中...</TableCell>
+            </TableRow>
+          ) : channels.length > 0 ? (
             channels.map((channel) => (
               <TableRow key={channel.ChannelID}>
                 <TableCell>{channel.ChannelID}</TableCell>
-                <TableCell onClick={() => makeChannelNameEditable(channel.ChannelID)}>{channel.ChannelName}</TableCell>
+                <TableCell>{channel.ChannelName}</TableCell>
                 <TableCell>
                   <Button onClick={() => handleGoToChannel(channel.ChannelID)}>前往</Button>
                 </TableCell>

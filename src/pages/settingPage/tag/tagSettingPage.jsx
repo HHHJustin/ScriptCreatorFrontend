@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TagTable from './tagSettingTable';
 import { useParams } from 'react-router-dom';
+import BackButton from '../backbutton';
 
 const TagSettingPage = () => {
     const { channel } = useParams();
@@ -33,6 +34,7 @@ const TagSettingPage = () => {
             channel={channel}
             onRefresh={fetchTagData}
         />
+        <BackButton />
         </div>
     );
 };

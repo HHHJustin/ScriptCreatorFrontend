@@ -203,3 +203,18 @@ export const PopupContent = styled.div`
   }
 `;
 
+export const BackButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UploadImageTable from './uploadImageTable';
 import { useParams } from 'react-router-dom';
+import BackButton from '../backbutton';
 
 const UploadImageSettingPage = () => {
   const { channel } = useParams();
@@ -34,6 +35,7 @@ const UploadImageSettingPage = () => {
         channel={channel}
         onRefresh={fetchUploadImageData}
        />
+       <BackButton />
     </div>
   );
 };
