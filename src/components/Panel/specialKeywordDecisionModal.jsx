@@ -6,8 +6,9 @@ import SpecialKeywordDecisionDataArea from './component/specialKeywordDecisionDa
 import EditableNodeTitle from './component/editableTitle';
 import { useParams } from 'react-router-dom';
 import useNodeInfo from './hook/useNodeInfo';
+import FilterTagEditor from './component/filterTag';
 
-function SpecialKeywordDecisionNodeModal({ node, tags, onClose, setNodes }) {
+function SpecialKeywordDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
   const [newTag, setNewTag] = useState('');
   const { channel } = useParams();
   const handleAddTag = (tagText) => {
@@ -29,29 +30,12 @@ function SpecialKeywordDecisionNodeModal({ node, tags, onClose, setNodes }) {
           />
         </TopWrapper>
         <ContentWrapper>
-          <TagArea>
-            <AddTagInput
-              type="text"
-              placeholder="新增標籤..."
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && newTag.trim() !== '') {
-                  handleAddTag(newTag.trim());
-                  setNewTag(''); // 清空輸入框
-                }
-              }}
-            />
-            {tags.map((tag) => {
-              const activeTags = node.data.tags ? node.data.tags.split(',').map(t => t.trim()) : [];
-              const isActive = activeTags.includes(tag.tag);
-              return (
-                <Tag key={tag.id} $active={isActive}>
-                  {tag.tag}
-                </Tag>
-              );
-            })}
-          </TagArea>
+        <FilterTagEditor
+          tags={tags}
+          node={node}
+          channel={channel}
+          onRefreshTags={onRefreshTags}
+        />
           <SpecialKeywordDecisionDataArea 
             node={node} 
             onGoNext={(id) => { console.log('你點到了 id:', id);}}

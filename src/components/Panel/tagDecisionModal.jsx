@@ -7,8 +7,9 @@ import { handleTitleChange } from './hook/panel';
 import TagDecisionDataArea from './component/tagDecsionDataArea';
 import { useParams } from 'react-router-dom';
 import useNodeInfo from './hook/useNodeInfo';
+import FilterTagEditor from './component/filterTag';
 
-function TagDecisionNodeModal({ node, tags, onClose, setNodes }) {
+function TagDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
   const [newTag, setNewTag] = useState('');
   const { channel } = useParams();
   const { fetchedNode, refresh } = useNodeInfo(node, channel);
@@ -50,29 +51,12 @@ function TagDecisionNodeModal({ node, tags, onClose, setNodes }) {
           />
         </TopWrapper>
         <ContentWrapper>
-          <TagArea>
-            <AddTagInput
-              type="text"
-              placeholder="新增標籤..."
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && newTag.trim() !== '') {
-                  handleAddTag(newTag.trim());
-                  setNewTag(''); // 清空輸入框
-                }
-              }}
-            />
-            {tags.map((tag) => {
-              const activeTags = node.data.tags ? node.data.tags.split(',').map(t => t.trim()) : [];
-              const isActive = activeTags.includes(tag.tag);
-              return (
-                <Tag key={tag.id} $active={isActive}>
-                  {tag.tag}
-                </Tag>
-              );
-            })}
-          </TagArea>
+        <FilterTagEditor
+          tags={tags}
+          node={node}
+          channel={channel}
+          onRefreshTags={onRefreshTags}
+        />
           <TagDecisionDataArea 
             node={node} 
             messages={fetchedNode} 

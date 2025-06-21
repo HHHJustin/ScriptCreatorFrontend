@@ -6,8 +6,9 @@ import RichMenuDataArea from './component/richMenuDataArea';
 import EditableNodeTitle from './component/editableTitle';
 import { handleTitleChange } from './hook/panel';
 import useNodeInfo from './hook/useNodeInfo';
+import FilterTagEditor from './component/filterTag';
 
-function RichMenuNodeModal({ node, tags, onClose, setNodes }) {
+function RichMenuNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
   const [ newTag, setNewTag] = useState('');
   const { channel } = useParams();
   const [fetchedRichMenu, setFetchRichMenu] = useState([]);
@@ -53,29 +54,12 @@ function RichMenuNodeModal({ node, tags, onClose, setNodes }) {
           <GoNextNode>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>
-          <TagArea>
-            <AddTagInput
-              type="text"
-              placeholder="新增標籤..."
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && newTag.trim() !== '') {
-                  handleAddTag(newTag.trim());
-                  setNewTag('');
-                }
-              }}
-            />
-            {tags.map((tag) => {
-              const activeTags = node.data.tags ? node.data.tags.split(',').map(t => t.trim()) : [];
-              const isActive = activeTags.includes(tag.tag);
-              return (
-                <Tag key={tag.id} $active={isActive}>
-                  {tag.tag}
-                </Tag>
-              );
-            })}
-          </TagArea>
+        <FilterTagEditor
+          tags={tags}
+          node={node}
+          channel={channel}
+          onRefreshTags={onRefreshTags}
+        />
            {/* 根據 node.type 顯示 RichMenuDataArea 或是顯示文字 */}
            {node.data.type === '關閉選單' ? (
             <div>無需任何資料</div> // 顯示文字，無需資料

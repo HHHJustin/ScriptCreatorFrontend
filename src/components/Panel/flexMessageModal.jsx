@@ -7,8 +7,9 @@ import { useParams } from 'react-router-dom';
 import EditableNodeTitle from './component/editableTitle';
 import { handleTitleChange } from './hook/panel';
 import useNodeInfo from './hook/useNodeInfo';
+import FilterTagEditor from './component/filterTag';
 
-function FlexMessageNodeModal({ node, setNodes, tags, onClose }) {
+function FlexMessageNodeModal({ node, setNodes, tags, onClose, onRefreshTags }) {
   const [newTag, setNewTag] = useState('');
   const [flexMessages, setFlexMessages] = useState([]);
   const { channel } = useParams();
@@ -53,29 +54,12 @@ function FlexMessageNodeModal({ node, setNodes, tags, onClose }) {
           <GoNextNode>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>
-          <TagArea>
-            <AddTagInput
-              type="text"
-              placeholder="新增標籤..."
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && newTag.trim() !== '') {
-                  handleAddTag(newTag.trim());
-                  setNewTag(''); // 清空輸入框
-                }
-              }}
-            />
-            {tags.map((tag) => {
-              const activeTags = node.data.tags ? node.data.tags.split(',').map(t => t.trim()) : [];
-              const isActive = activeTags.includes(tag.tag);
-              return (
-                <Tag key={tag.id} $active={isActive}>
-                  {tag.tag}
-                </Tag>
-              );
-            })}
-          </TagArea>
+        <FilterTagEditor
+          tags={tags}
+          node={node}
+          channel={channel}
+          onRefreshTags={onRefreshTags}
+        />
           <FlexMessageDataArea 
             node={node} 
             message={fetchedNode}

@@ -18,27 +18,6 @@ const edgeTypes = {
   customEdge: CustomEdge,
 };
 
-const nodeConfig = [
-  { id: '1', title: '訊息節點', type: '訊息', position: { x: 100, y: 100 }, key: 'message', tags: '標籤1, 標籤2' },
-  { id: '2', title: '關鍵字節點', type: '關鍵字判定', position: { x: 300, y: 100 }, key: 'keyword' ,tags: '標籤1, 標籤2'},
-  { id: '3', title: '快速回覆節點', type: '快速回覆', position: { x: 500, y: 100 }, key: 'quickReply', tags:'標籤1' },
-  { id: '4', title: '標籤操作節點', type: '標籤操作', position: { x: 700, y: 100 }, key: 'tagOperation', tags:'標籤1' },
-  { id: '5', title: '加入好友', type: '入口', position: { x: 900, y: 100 }, key: 'firstStep', tags:'標籤2' },
-  { id: '6', title: '隨機訊息節點', type: '隨機', position: { x: 100, y: 300 }, key: 'random', tags:'標籤2' },
-  { id: '7', title: '標籤判定節點', type: '標籤判定', position: { x: 300, y: 300 }, key: 'tagDecision', tags:'標籤5' },
-  { id: '8', title: '特殊關鍵字節點', type: '特殊關鍵字', position: { x: 500, y: 300 }, key: 'specialKeyword', tags:'標籤1, 標籤2' },
-  { id: '9', title: '圖文選單節點', type: '圖文選單', position: { x: 700, y: 300 }, key: 'richMenu', tags:'標籤4' },
-  { id: '10', title: '彈性模板節點', type: '彈性模板', position: { x: 900, y: 300 }, key: 'flexMessage', tags:'標籤3' },
-];
-
-const tagList = [
-  {id: '1', tag: '標籤1'},
-  {id: '2', tag: '標籤2'},
-  {id: '3', tag: '標籤3'},
-  {id: '4', tag: '標籤4'},
-  {id: '5', tag: '標籤5'},
-]
-
 const getInitialViewport = () => {
   const stored = localStorage.getItem('viewport');
   return stored ? JSON.parse(stored) : { x: 0, y: 0, zoom: 1 };
@@ -53,6 +32,29 @@ const HomePage = () => {
 
   const onConnect = useCallback(createOnConnect(setEdges, channel), [setEdges]);
   const onNodesChange = useCallback(createOnNodesChange(nodes, onNodesChangeBase, updateNodeLocation, channel), [nodes, onNodesChangeBase, channel]);
+  
+  const [tagList, setTagList] = useState([]);
+  
+  const fetchFilterTags = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/${channel}/filtertags/fetchInfo`);
+      const data = await res.json();
+      const formattedFilterTags = Array.isArray(data.filterTags)
+        ? data.filterTags.map(item => ({
+            id: item.FilterTagID,
+            tag: item.FilterTagName
+          }))
+        : [];
+      setTagList(formattedFilterTags);
+    } catch (err) {
+      console.error('Fetch tags info failed:', err);
+    }
+  }, [channel]);
+  
+  
+  useEffect(() => {
+    fetchFilterTags();
+  }, [fetchFilterTags]);
 
   useEffect(() => {
     fetchGraphData(channel, setNodes, setEdges);
@@ -79,6 +81,7 @@ const HomePage = () => {
         viewport={viewport}
         setViewport={setViewport}
         tagList={tagList}
+        onRefreshTags={fetchFilterTags}
       />
       </ReactFlowProvider>
     </div>

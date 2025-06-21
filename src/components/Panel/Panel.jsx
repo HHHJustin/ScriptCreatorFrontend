@@ -11,7 +11,7 @@ import { useOnRefreshGraph } from '../../pages/routerPage/hooks/homepage';
 
 const Panel = ({ nodes, setNodes, onNodesChange, edges, 
   setEdges, onConnect, setBarMenuOpen, 
-  nodeTypes, edgeTypes, viewport, setViewport, tagList }) => {
+  nodeTypes, edgeTypes, viewport, setViewport, tagList, onRefreshTags }) => {
   const [selectedNodes, setSelectedNodes] = useState([]);
   // const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -131,13 +131,6 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
       >
         <Background color="#ddd" gap={20} size={1} variant="lines" />
       </ReactFlow>
-{/* 
-      {menuVisible && (
-        <SelectBoxMenuWrapper style={{ top: menuPosition.y, left: menuPosition.x }}>
-          <SelectBoxMenuItem onClick={() => console.log('刪除')}>刪除這些點</SelectBoxMenuItem>
-          <SelectBoxMenuItem onClick={() => console.log('複製')}>複製這些點</SelectBoxMenuItem>
-        </SelectBoxMenuWrapper>
-      )} */}
 
       {panelMenuVisible && (
         <ContextMenu $x={panelMenuPosition.x} $y={panelMenuPosition.y}>
@@ -157,7 +150,7 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
           </MenuItem>
         </ContextMenu>
       )}
-      {renderModalByType(editNode, setNodes, tagList, handleCloseModal)}
+      {renderModalByType(editNode, setNodes, tagList, handleCloseModal, onRefreshTags)}
     </div>
   );
 };
