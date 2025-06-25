@@ -1,10 +1,14 @@
 import { addEdge } from 'reactflow';
 import { useCallback } from 'react';
 
-export const fetchGraphData = async (channel, setNodes, setEdges) => {
+export const fetchGraphData = async (channel, setNodes, setEdges , tags = []) => {
+  const tagParams = tags.map(tag => `tags=${encodeURIComponent(tag)}`).join('&');
+  const url = `/api/${channel}/home${tagParams ? `?${tagParams}` : ''}`;
   try {
-    const res = await fetch(`/api/${channel}/home`);
+    const res = await fetch(url);
     const data = await res.json();
+    setNodes(data.nodes || []);
+    setEdges(data.links || []);
 
     const newNodes = data.nodes.map(node => ({
       id: String(node.id),

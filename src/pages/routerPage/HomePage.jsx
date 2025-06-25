@@ -34,6 +34,7 @@ const HomePage = () => {
   const onNodesChange = useCallback(createOnNodesChange(nodes, onNodesChangeBase, updateNodeLocation, channel), [nodes, onNodesChangeBase, channel]);
   
   const [tagList, setTagList] = useState([]);
+  const [activeTags, setActiveTags] = useState([]);
   
   const fetchFilterTags = useCallback(async () => {
     try {
@@ -51,12 +52,13 @@ const HomePage = () => {
     }
   }, [channel]);
   
-  
-  useEffect(() => {
-    fetchFilterTags();
-  }, [fetchFilterTags]);
+  const onSearch = useCallback((tags) => {
+    setActiveTags(tags);
+    fetchGraphData(channel, setNodes, setEdges, tags); // 有 tags 時呼叫帶參數版本
+  }, [channel]);
 
   useEffect(() => {
+    fetchFilterTags();
     fetchGraphData(channel, setNodes, setEdges);
   }, [channel]);
   
@@ -66,7 +68,13 @@ const HomePage = () => {
 
   return (
     <div style={{ width: '100%', height: '100vh' }}>
-      <Navbar barMenuOpen={barMenuOpen} setBarMenuOpen={setBarMenuOpen} />
+      <Navbar
+        barMenuOpen={barMenuOpen}
+        setBarMenuOpen={setBarMenuOpen}
+        onSearch={onSearch}
+        tagList={tagList}
+      />
+
       <ReactFlowProvider>
       <Panel
         nodes={nodes}

@@ -5,11 +5,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Wrapper, IconWrapper, SearchWrapper, Search, BarMenu, BarMenuItem } from './narbarStyle';
 
 
-function Navbar({ barMenuOpen, setBarMenuOpen }) {
+function Navbar({ barMenuOpen, setBarMenuOpen, onSearch }) {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchText, setSearchText] = useState('');
   const menuRef = useRef(null);
   const navigate = useNavigate(); 
   const { channel } = useParams(); 
+
   const toggleSearch = () => {
     setSearchOpen(prev => !prev);
   };
@@ -52,6 +54,12 @@ function Navbar({ barMenuOpen, setBarMenuOpen }) {
     };
   }, [barMenuOpen]);
   
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      const tags = searchText.split(',').map(tag => tag.trim()).filter(Boolean);
+      onSearch(tags); // 呼叫傳進來的函式
+    }
+  };
   
   return (
     <>
@@ -60,9 +68,15 @@ function Navbar({ barMenuOpen, setBarMenuOpen }) {
         <FontAwesomeIcon icon={faBars} />
       </IconWrapper>
       <SearchWrapper $expanded={searchOpen}>
-        <FontAwesomeIcon icon={faMagnifyingGlass}  onClick={toggleSearch}/>
-        <Search placeholder="搜尋..." $expanded={searchOpen} />
-      </SearchWrapper>
+          <FontAwesomeIcon icon={faMagnifyingGlass} onClick={() => setSearchOpen(prev => !prev)} />
+          <Search
+            placeholder="搜尋..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
+            $expanded={searchOpen}
+          />
+        </SearchWrapper>
     </Wrapper>
     {barMenuOpen && (
         <BarMenu ref={menuRef}>
