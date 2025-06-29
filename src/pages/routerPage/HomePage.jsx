@@ -38,7 +38,7 @@ const HomePage = () => {
   
   const fetchFilterTags = useCallback(async () => {
     try {
-      const res = await fetch(`/api/${channel}/filtertags/fetchInfo`);
+      const res = await fetch(`/api/${channel}/filtertags/fetchInfo`, {credentials: "include"});
       const data = await res.json();
       const formattedFilterTags = Array.isArray(data.filterTags)
         ? data.filterTags.map(item => ({

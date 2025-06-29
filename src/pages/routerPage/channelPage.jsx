@@ -1,17 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TableContainer, Table, TableHeader, TableRow, TableCell, Button, FloatingButton} from './style'; // 引入样式
+import { TableContainer, Table, TableHeader, TableRow, TableCell, Button, FloatingButton } from './style';
 
-const ChannelPage = ({ channels, loading }) => {
+export default function ChannelPage() {
   const navigate = useNavigate();
+  const [channels, setChannels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleGoToChannel = (channelID) => {
-    navigate(`/${channelID}/home`);  // 页面跳转
+  const fetchChannels = async () => {
+    try {
+      const res = await fetch('/api/channels', {
+        credentials: "include"
+      });
+
+      if (res.status === 401) {
+        // 沒有登入，導回登入頁
+        navigate('/');
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(`HTTP error ${res.status}`);
+      }
+
+      const data = await res.json();
+      setChannels(data.channels);
+    } catch (err) {
+      console.error('無法取得頻道清單:', err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchChannels();
+  }, []);
+
+  if (loading) return <div>載入中...</div>;
 
   return (
     <TableContainer>
-       <Table>
+      <Table>
         <thead>
           <TableRow>
             <TableHeader>編號</TableHeader>
@@ -20,17 +49,13 @@ const ChannelPage = ({ channels, loading }) => {
           </TableRow>
         </thead>
         <tbody>
-          {loading ? (
-            <TableRow>
-              <TableCell colSpan="3">載入中...</TableCell>
-            </TableRow>
-          ) : channels.length > 0 ? (
+          {channels.length > 0 ? (
             channels.map((channel) => (
               <TableRow key={channel.ChannelID}>
                 <TableCell>{channel.ChannelID}</TableCell>
                 <TableCell>{channel.ChannelName}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleGoToChannel(channel.ChannelID)}>前往</Button>
+                  <Button onClick={() => navigate(`/${channel.ChannelID}/home`)}>前往</Button>
                 </TableCell>
               </TableRow>
             ))
@@ -43,8 +68,5 @@ const ChannelPage = ({ channels, loading }) => {
       </Table>
       <FloatingButton onClick={() => console.log('新增頻道')}>+</FloatingButton>
     </TableContainer>
-   
   );
-};
-
-export default ChannelPage;
+}

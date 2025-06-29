@@ -4,13 +4,22 @@ import { useCallback } from 'react';
 export const fetchGraphData = async (channel, setNodes, setEdges , tags = []) => {
   const tagParams = tags.map(tag => `tags=${encodeURIComponent(tag)}`).join('&');
   const url = `/api/${channel}/home${tagParams ? `?${tagParams}` : ''}`;
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-    setNodes(data.nodes || []);
-    setEdges(data.links || []);
 
-    const newNodes = data.nodes.map(node => ({
+  try {
+    const res = await fetch(url, {
+      credentials: "include"
+    });
+    if (!res.ok) {
+      throw new Error(`HTTP error ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    // 安全防呆: 如果後端沒給 nodes/links，就當空陣列
+    const rawNodes = Array.isArray(data.nodes) ? data.nodes : [];
+    const rawLinks = Array.isArray(data.links) ? data.links : [];
+
+    const newNodes = rawNodes.map(node => ({
       id: String(node.id),
       type: 'indexNode',
       position: { x: Number(node.x), y: Number(node.y) },
@@ -20,8 +29,8 @@ export const fetchGraphData = async (channel, setNodes, setEdges , tags = []) =>
       },
       style: { zIndex: 1 },
     }));
-    
-    const newEdges = data.links.map(link => ({
+
+    const newEdges = rawLinks.map(link => ({
       id: `e${link.from}-${link.to}`,
       source: String(link.from),
       target: String(link.to),
@@ -31,10 +40,12 @@ export const fetchGraphData = async (channel, setNodes, setEdges , tags = []) =>
 
     setNodes(newNodes);
     setEdges(newEdges);
+
   } catch (err) {
     console.error('Failed to fetch graph data:', err);
   }
 };
+
 
 export const useOnRefreshGraph = (channel, setNodes, setEdges) => {
   return useCallback(() => {
