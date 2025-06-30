@@ -6,7 +6,7 @@ import Navbar from '../../components/header/navbar';
 import Panel from '../../components/panel/Panel';
 import IndexNode from '../../components/nodes/indexNode';
 import CustomEdge from '../../components/edge/edge';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { updateNodeLocation, createOnConnect, createOnNodesChange, fetchGraphData } from './hooks/homepage';
 
 
@@ -29,7 +29,7 @@ const HomePage = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [barMenuOpen, setBarMenuOpen] = useState(false);
   const [viewport, setViewport] = useState(getInitialViewport());
-
+  const navigate = useNavigate();
   const onConnect = useCallback(createOnConnect(setEdges, channel), [setEdges]);
   const onNodesChange = useCallback(createOnNodesChange(nodes, onNodesChangeBase, updateNodeLocation, channel), [nodes, onNodesChangeBase, channel]);
   
@@ -38,7 +38,13 @@ const HomePage = () => {
   
   const fetchFilterTags = useCallback(async () => {
     try {
-      const res = await fetch(`/api/${channel}/filtertags/fetchInfo`, {credentials: "include"});
+      const res = await fetch(`/api/${channel}/filtertags/fetchInfo`
+      , {credentials: "include"});
+      if (res.status === 401) {
+        // 沒有登入，導回登入頁
+        navigate('/');
+        return;
+      }
       const data = await res.json();
       const formattedFilterTags = Array.isArray(data.filterTags)
         ? data.filterTags.map(item => ({
@@ -54,7 +60,7 @@ const HomePage = () => {
   
   const onSearch = useCallback((tags) => {
     setActiveTags(tags);
-    fetchGraphData(channel, setNodes, setEdges, tags); // 有 tags 時呼叫帶參數版本
+    fetchGraphData(channel, setNodes, setEdges, tags); 
   }, [channel]);
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { Handle, Position, useReactFlow } from 'reactflow';
 import ContentRenderer from './contentRenderer';
 import { Wrapper, NodeWrapper, Title, TypeBadge, TriangleButton, ContentWrapper, ContextMenu, MenuItem, SubMenu, SubMenuItem } from './indexNodeStyle';
-import { useNodeActions, handleDeleteNode } from './hooks/index';
+import { useNodeActions, handleDeleteNode, handleDuplicateNode } from './hooks/index';
 import { useState, useEffect, useRef} from 'react';
 import { createPortal } from 'react-dom';
 import { options } from './indexTypeData';
@@ -44,6 +44,8 @@ function IndexNode({ data, id }) {
     } else if (action === '刪除此點') {
       if (!window.confirm('確定要刪除這點嗎？')) return;
       handleDeleteNode(id, channel, setMenuVisible, setNodes);
+    } else if (action === '複製') {
+      handleDuplicateNode(id, channel, setMenuVisible, setNodes);
     }
   };
 
@@ -163,6 +165,7 @@ function IndexNode({ data, id }) {
                 ))}
               </SubMenu>
             </MenuItem>
+            <MenuItem onClick={() => handleMenuClick('複製')}>複製</MenuItem>
             <MenuItem onClick={() => handleMenuClick('刪除此點')}>刪除此點</MenuItem>
             <MenuItem onClick={() => handleMenuClick('編輯')}>編輯</MenuItem>
           </ContextMenu>,

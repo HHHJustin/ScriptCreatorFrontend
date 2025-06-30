@@ -1,7 +1,16 @@
 import { addEdge } from 'reactflow';
 import { useCallback } from 'react';
 
-export const fetchGraphData = async (channel, setNodes, setEdges , tags = []) => {
+/**
+ * 取得圖形資料
+ * 
+ * @param {string} channel - 頻道ID
+ * @param {function} setNodes - 設定節點
+ * @param {function} setEdges - 設定邊
+ * @param {array} tags - 標籤篩選
+ * @param {function} navigate - react-router-dom navigate
+ */
+export const fetchGraphData = async (channel, setNodes, setEdges, tags = [], navigate) => {
   const tagParams = tags.map(tag => `tags=${encodeURIComponent(tag)}`).join('&');
   const url = `/api/${channel}/home${tagParams ? `?${tagParams}` : ''}`;
 
@@ -9,13 +18,19 @@ export const fetchGraphData = async (channel, setNodes, setEdges , tags = []) =>
     const res = await fetch(url, {
       credentials: "include"
     });
+
+    if (res.status === 401) {
+      navigate('/login');
+      return;
+    }
+
     if (!res.ok) {
       throw new Error(`HTTP error ${res.status}`);
     }
 
     const data = await res.json();
 
-    // 安全防呆: 如果後端沒給 nodes/links，就當空陣列
+    // 安全防呆
     const rawNodes = Array.isArray(data.nodes) ? data.nodes : [];
     const rawLinks = Array.isArray(data.links) ? data.links : [];
 
@@ -46,13 +61,18 @@ export const fetchGraphData = async (channel, setNodes, setEdges , tags = []) =>
   }
 };
 
-
-export const useOnRefreshGraph = (channel, setNodes, setEdges) => {
+/**
+ * 提供刷新圖形的hook
+ */
+export const useOnRefreshGraph = (channel, setNodes, setEdges, navigate) => {
   return useCallback(() => {
-    fetchGraphData(channel, setNodes, setEdges);
-  }, [channel, setNodes, setEdges]);
+    fetchGraphData(channel, setNodes, setEdges, [], navigate);
+  }, [channel, setNodes, setEdges, navigate]);
 };
 
+/**
+ * 更新節點位置
+ */
 export const updateNodeLocation = async (node, channel) => {
   try {
     await fetch(`/api/${channel}/updatelocation`, {
@@ -71,6 +91,9 @@ export const updateNodeLocation = async (node, channel) => {
   }
 };
 
+/**
+ * 創建連線時的處理
+ */
 export const createOnConnect = (setEdges, channel) => {
   return async (params) => {
     const { source, sourceHandle, target } = params;
@@ -92,7 +115,9 @@ export const createOnConnect = (setEdges, channel) => {
   };
 };
 
-
+/**
+ * 節點移動時的更新
+ */
 export const createOnNodesChange = (nodes, onNodesChangeBase, updateNodeLocation, channel) => {
   return (changes) => {
     changes.forEach((change) => {
@@ -114,5 +139,3 @@ export const createOnNodesChange = (nodes, onNodesChangeBase, updateNodeLocation
     onNodesChangeBase(changes);
   };
 };
-
-  

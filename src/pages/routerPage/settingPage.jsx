@@ -1,12 +1,36 @@
 import { SettingOverlay, SettingWrapper, TabsWrapper, TabButton, ContentArea  } from "../settingPage/style";
 import { RenderCurrentPage } from "../settingPage/render";
-import { useState } from "react";
-import { useParams } from 'react-router-dom';
-
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from 'react-router-dom';
 
 const SettingPage = () => {
-  const { channel } = useParams();  // 這裡就拿到網址上的 channel
+  const { channel } = useParams();  
   const [currentTab, setCurrentTab] = useState('tab1');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`/api/${channel}/checkauth`, {
+          credentials: "include"
+        });
+
+        if (res.status === 401) {
+          navigate('/');
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error(`HTTP error ${res.status}`);
+        }
+      } catch (err) {
+        console.error('檢查授權失敗:', err);
+      }
+    };
+
+    checkAuth();
+  }, [channel, navigate]);
+  
     return (
       <SettingOverlay>
         <SettingWrapper>

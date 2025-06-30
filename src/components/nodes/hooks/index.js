@@ -99,3 +99,26 @@ export const handleDeleteNode = async (id, channel, setMenuVisible, setNodes) =>
   }
 };
 
+export const handleDuplicateNode = async (id, channel, setMenuVisible, setNodes) => {
+  setMenuVisible(false);
+  const nodeID = parseInt(id, 10);
+  try {
+    const res = await fetch(`/api/${channel}/node/duplicate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ IDs: [nodeID] }),
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      console.error('❌ Failed to copy node:', error);
+    } else {
+      console.log('✅ Node copy successfully');
+      window.location.reload();
+    }
+  } catch (err) {
+    console.error('❌ Error deleting node:', err);
+  }
+};
