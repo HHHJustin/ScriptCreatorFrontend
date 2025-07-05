@@ -141,7 +141,7 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
               {Object.entries(options).map(([label, value]) => (
                 <SubMenuItem
                   key={value}
-                  onClick={() => handleCreateNodeClick(value, panelMenuPosition.x - 150, panelMenuPosition.y - 300, channel, navigate)}
+                  onClick={() => handleCreateNodeClick(value, panelMenuPosition.x - 300, panelMenuPosition.y - 500, channel, navigate)}
                 >
                   {label}
                 </SubMenuItem>
