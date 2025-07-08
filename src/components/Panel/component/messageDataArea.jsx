@@ -87,7 +87,7 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
     setEditingIndex(null);
     if (item.content === editedContent) return;
     try {
-      const res = await fetch(`/api/${channel}/messages/update`, {
+      const res = await fetch(`/api/${channel}/messages/update/text`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -109,34 +109,39 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = item.rawType === 'Image' ? 'image/*' : 'video/*';
-    input.onchange = (e) => {
+    
+    input.onchange = async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const messageContent = `${file.name};${reader.result}`;
-        try {
-          const response = await fetch(`/api/${channel}/messages/update`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              messageID: item.messageID,
-              currentNodeID: currentIDInt,
-              messageType: item.rawType,
-              messageContent
-            })
-          });
-          if (response.ok) onRefresh && onRefresh();
-          else throw new Error('Network response was not ok');
-        } catch (error) {
-          console.error('Error:', error);
-          alert('上傳失敗');
+  
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('messageID', item.messageID);
+      formData.append('currentNodeID', currentIDInt);
+      formData.append('messageType', item.rawType); // 'Image' or 'Video'
+  
+      try {
+        const response = await fetch(`/api/${channel}/messages/update/media`, {
+          method: 'POST',
+          body: formData, 
+        });
+  
+        if (response.ok) {
+          onRefresh && onRefresh();
+        } else {
+          const errorText = await response.text();
+          console.error('更新失敗:', errorText);
+          alert(`上傳失敗：\n${errorText}`);
         }
-      };
-      reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Error:', error);
+        alert('上傳失敗');
+      }
     };
+  
     input.click();
   };
+  
 
   return (
     <DataAreaWrapper>

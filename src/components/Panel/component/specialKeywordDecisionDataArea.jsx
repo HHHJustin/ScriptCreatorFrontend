@@ -106,7 +106,7 @@ const handleUpdateContent = async (item, field, value = editedContent) => {
                   onChange={(e) => handleUpdateContent(item, "type", e.target.value)}
                 >
                   <option value="">請選擇操作</option>
-                  <option value="1o1">單一玩家</option>
+                  <option value="user">單一玩家</option>
                   <option value="group">群組</option>
               </StyledSelect>
               </CenteredTd>

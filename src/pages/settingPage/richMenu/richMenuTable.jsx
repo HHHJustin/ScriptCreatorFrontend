@@ -64,29 +64,22 @@ const RichMenuTable = ({ richMenus, channel, onRefresh }) => {
 
   const handleUpdateRichMenu = async (id, name, json) => {
     if (name.trim() === '') return;
-    let imageBase64 = '';
+  
+    const formData = new FormData();
+    formData.append('menuID', id);
+    formData.append('menuName', name);
+    formData.append('richMenuJson', json);
+  
     if (imageFile) {
-      imageBase64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64 = reader.result.split(',')[1]; // 只取 base64 字串
-          resolve(`${imageFile.name};${base64}`);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(imageFile);
-      });
+      formData.append('file', imageFile);
     }
+  
     try {
       const res = await fetch(`/api/${channel}/setting/richMenus/update`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          menuID: id,
-          menuName: name,
-          richMenuJson: json,
-          richMenuImage: imageBase64,
-        }),
+        body: formData,
       });
+  
       if (res.ok) {
         setEditingMenu(null);
         setShowPopup(false);
@@ -100,7 +93,7 @@ const RichMenuTable = ({ richMenus, channel, onRefresh }) => {
       console.error('更新錯誤:', err);
       alert('更新失敗');
     }
-  };
+  };  
 
   const handleDeleteRichMenu = async (id) => {
     if (!window.confirm('確定要刪除這筆訊息嗎？')) return;

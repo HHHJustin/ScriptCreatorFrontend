@@ -12,10 +12,6 @@ function Navbar({ barMenuOpen, setBarMenuOpen, onSearch }) {
   const navigate = useNavigate(); 
   const { channel } = useParams(); 
 
-  const toggleSearch = () => {
-    setSearchOpen(prev => !prev);
-  };
-
   const toggleBarMenu = () => {
     setBarMenuOpen(prev => !prev);
   };

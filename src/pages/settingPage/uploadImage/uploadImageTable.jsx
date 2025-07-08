@@ -27,6 +27,7 @@ const UploadImageTable = ({ images, channel, onRefresh }) => {
           alert('建立失敗');
         }
       };
+
     const handleEditClick = (image) => {
         setEditingImage(image);
         setImageName(image.name);
@@ -86,44 +87,34 @@ const UploadImageTable = ({ images, channel, onRefresh }) => {
     };
 
     const handleUploadImage = async (id, name) => {
-        if (name.trim() === '') return;
-        let imageBase64 = '';
-        if (imageFile) {
-            imageBase64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64 = reader.result.split(',')[1]; // 只取 base64 字串
-                resolve(`${imageFile.name};${base64}`);
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(imageFile);
-            });
+    if (name.trim() === '' || !imageFile) return;
+
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    formData.append('imageID', id);
+    formData.append('imageName', name);
+
+    try {
+        const res = await fetch(`/api/${channel}/setting/uploadImages/update`, {
+        method: 'POST',
+        body: formData,
+        });
+
+        if (res.ok) {
+        setEditingImage(null);
+        setShowPopup(false);
+        onRefresh && onRefresh();
+        } else {
+        const errorText = await res.text();
+        console.error('更新失敗:', errorText);
+        alert(`更新失敗：\n${errorText}`);
         }
-        try {
-            const res = await fetch(`/api/${channel}/setting/uploadImages/update`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                imageID: id,
-                imageName: name,
-                image: imageBase64,
-            }),
-            });
-            if (res.ok) {
-            setEditingImage(null);
-            setShowPopup(false);
-            onRefresh && onRefresh();
-            } else {
-            const errorText = await res.text();
-            console.error('更新失敗:', errorText);
-            alert(`更新失敗：\n${errorText}`);
-            }
-        } catch (err) {
-            console.error('更新錯誤:', err);
-            alert('更新失敗');
-        }
+    } catch (err) {
+        console.error('更新錯誤:', err);
+        alert('更新失敗');
+    }
     };
-    
+
     const CopyImageLink = async(id) => {
         try {
             const res = await fetch(`/api/${channel}/setting/uploadImages/${id}/getImageID`);

@@ -11,11 +11,6 @@ import FilterTagEditor from './component/filterTag';
 
 function MessageNodeModal({ node, tags, onClose, setNodes, onRefreshTags}) {
   const { channel } = useParams();
-  const [newTag, setNewTag] = useState('');
-  const handleAddTag = (tagText) => {
-    console.log('新增標籤：', tagText);
-  };
-
   const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
   if (!node) return null;
