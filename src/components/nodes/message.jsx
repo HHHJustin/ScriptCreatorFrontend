@@ -1,18 +1,19 @@
 import { Panel } from './nodeStyle';
 
 function MessageNode({ messages }) {
-  if (!messages || messages.length === 0) return null;
+  if (!Array.isArray(messages) || messages.length === 0) return null;
+
   return (
     <>
-      {messages.map((msgWrapper, index) => {
-        const msg = msgWrapper.Message;  
-        return (
-          <Panel key={index}>
-            <div className="type">{msg.Type}</div>
-            <div className="content">{msg.Content}</div>
-          </Panel>
-        );
-      })}
+      {messages.map((msg, index) => (
+        <Panel key={index}>
+          <div className="type">{msg.type}</div>
+          <div className="content">
+            {msg.type === 'text' && msg.text}
+            {(msg.type === 'image' || msg.type === 'video') && msg.fileName}
+          </div>
+        </Panel>
+      ))}
     </>
   );
 }

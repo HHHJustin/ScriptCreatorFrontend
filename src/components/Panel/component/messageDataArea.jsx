@@ -9,9 +9,9 @@ import {
 
 const columns = [
   { key: 'id', label: '編號', align: 'center', width: '15%' },
-  { key: 'type', label: '種類', align: 'center', width: '15%' },
-  { key: 'content', label: '內容', align: 'center', width: '55%' },
-  { key: 'action', label: '動作', align: 'center', width: '15%' },
+  { key: 'type', label: '種類', align: 'center', width: '25%' },
+  { key: 'content', label: '內容', align: 'center', width: '40%' },
+  { key: 'action', label: '動作', align: 'center', width: '20%' },
 ];
 
 
@@ -32,16 +32,20 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
   const currentIDInt = parseInt(node.id, 10);
 
   const allData = Array.isArray(message)
-    ? message
-    .filter(item => typeof item.Index === 'number')
-    .map(({ Index, Message }) => ({
-        id: Index,
-        rawType: Message?.Type || '',
-        type: typeToChinese(Message?.Type),
-        content: Message?.Content?.trim() || '—',
-        messageID: Message?.MessageID || 0,
-      }))
-    : [];
+  ? message.map((item) => ({
+      id: item.index,
+      rawType: item.type,
+      type: typeToChinese(item.type),
+      messageID: item.messageId,
+      content:
+      item.type === 'text'
+        ? (item.text?.trim() || '—')
+        : item.type === 'image' || item.type === 'video'
+        ? `${item.fileName || ''};${item.fileURL || ''}`
+        : '—',
+    }))
+  : [];
+
 
   const handleSubmit = async () => {
     if (!newType) return alert('請選擇訊息種類');
@@ -108,7 +112,7 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
   const uploadMedia = (item) => {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = item.rawType === 'Image' ? 'image/*' : 'video/*';
+    input.accept = item.rawType === 'image' ? 'image/*' : 'video/*';
     
     input.onchange = async (e) => {
       const file = e.target.files?.[0];
@@ -157,7 +161,7 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
               {columns.map(col => (
                 <Td key={col.key} style={{ textAlign: col.align, width: col.width }}>
                   {col.key === 'content' ? (
-                    item.rawType === 'Image' || item.rawType === 'Video'
+                    item.rawType === 'image' || item.rawType === 'video'
                       ? <MediaContent item={item} uploadMedia={uploadMedia} />
                       : editingIndex === item.id
                         ? <EditableTextArea
@@ -181,9 +185,9 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
             <CenteredTd>
               <StyledSelect value={newType} onChange={(e) => setNewType(e.target.value)}>
                 <option value=""> - </option>
-                <option value="Text">文字</option>
-                <option value="Image">圖片</option>
-                <option value="Video">影片</option>
+                <option value="text">文字</option>
+                <option value="image">圖片</option>
+                <option value="video">影片</option>
               </StyledSelect>
             </CenteredTd>
             <CenteredTd />
@@ -200,10 +204,10 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
 export default MessageDataArea;
 
 const typeToChinese = (type) => {
-  switch (type) {
-    case 'Text': return '文字';
-    case 'Image': return '圖片';
-    case 'Video': return '影片';
+  switch (type?.toLowerCase()) {
+    case 'text': return '文字';
+    case 'image': return '圖片';
+    case 'video': return '影片';
     default: return '未知';
   }
 };
