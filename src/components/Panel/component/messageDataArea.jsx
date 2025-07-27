@@ -108,12 +108,11 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
       alert('更新失敗');
     }
   };
-
   const uploadMedia = (item) => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = item.rawType === 'image' ? 'image/*' : 'video/*';
-    
+  
     input.onchange = async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -122,30 +121,34 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
       formData.append('file', file);
       formData.append('messageID', item.messageID);
       formData.append('currentNodeID', currentIDInt);
-      formData.append('messageType', item.rawType); // 'Image' or 'Video'
+      formData.append('messageType', item.rawType);
   
-      try {
-        const response = await fetch(`/api/${channel}/messages/update/media`, {
-          method: 'POST',
-          body: formData, 
-        });
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `/api/${channel}/messages/update/media`);
   
-        if (response.ok) {
+      // **監聽進度**
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percent = (event.loaded / event.total) * 100;
+          console.log(`上傳進度: ${percent.toFixed(2)}%`);
+          // 這裡可以更新 UI progress bar
+        }
+      };
+  
+      xhr.onload = () => {
+        if (xhr.status === 200) {
           onRefresh && onRefresh();
         } else {
-          const errorText = await response.text();
-          console.error('更新失敗:', errorText);
-          alert(`上傳失敗：\n${errorText}`);
+          alert(`上傳失敗：\n${xhr.responseText}`);
         }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('上傳失敗');
-      }
+      };
+  
+      xhr.onerror = () => alert("上傳失敗");
+      xhr.send(formData);
     };
   
     input.click();
-  };
-  
+  };  
 
   return (
     <DataAreaWrapper>
