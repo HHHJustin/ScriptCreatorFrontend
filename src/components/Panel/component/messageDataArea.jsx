@@ -149,6 +149,14 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
   
     input.click();
   };  
+  document.body.insertAdjacentHTML('beforeend', `
+  <div style="width:80%;margin:10px auto;">
+    <div style="background:#ccc;height:20px;border-radius:10px;overflow:hidden;">
+      <div id="progressBar" style="background:#4caf50;width:0;height:100%;"></div>
+    </div>
+    <div id="progressText" style="text-align:center;margin-top:5px;">等待上傳</div>
+  </div>
+  `);
 
   return (
     <DataAreaWrapper>
