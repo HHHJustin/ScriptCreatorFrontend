@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyledNodeTitleInput, StyledNodeTitleSpan } from '../modalStyle';
 
-
 function EditableNodeTitle({ node, onTitleChange, setNodes, channel }) {
   const title = node.data.title;
   const [isEditing, setIsEditing] = useState(false);
