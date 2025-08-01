@@ -5,7 +5,7 @@ import {
   DataAreaWrapper, Table, Th, Td, Tr, CenteredTd, EditableTextArea,
   StyledSelect, StyledButton, MediaContainer, MediaFileName
 } from '../modalStyle';
-import {compressImage, compressVideo} from '../hook/compress.js'
+
 
 const columns = [
   { key: 'id', label: '編號', align: 'center', width: '15%' },
@@ -113,62 +113,39 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = item.rawType === 'image' ? 'image/*' : 'video/*';
-  
+    
     input.onchange = async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-  
-      document.getElementById('progressText').innerText = "壓縮中...";
-      let processedFile = file;
-  
-      if (item.rawType === 'image') {
-        processedFile = await compressImage(file);
-      } else if (item.rawType === 'video') {
-        processedFile = await compressVideo(file);
-      }
-  
+    
       const formData = new FormData();
-      formData.append('file', processedFile, file.name);
+      formData.append('file', file);
       formData.append('messageID', item.messageID);
       formData.append('currentNodeID', currentIDInt);
-      formData.append('messageType', item.rawType);
+      formData.append('messageType', item.rawType); // 'Image' or 'Video'
   
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", `/api/${channel}/messages/update/media`);
+      try {
+        const response = await fetch(`/api/${channel}/messages/update/media`, {
+          method: 'POST',
+          body: formData, 
+        });
   
-      // 上傳進度
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const percent = (event.loaded / event.total) * 100;
-          document.getElementById('progressBar').style.width = percent + "%";
-          document.getElementById('progressText').innerText = `上傳中 ${percent.toFixed(1)}%`;
-        }
-      };
-  
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          document.getElementById('progressText').innerText = "上傳完成，後端處理中…";
+        if (response.ok) {
           onRefresh && onRefresh();
         } else {
-          alert(`上傳失敗：\n${xhr.responseText}`);
+          const errorText = await response.text();
+          console.error('更新失敗:', errorText);
+          alert(`上傳失敗：\n${errorText}`);
         }
-      };
-  
-      xhr.onerror = () => alert("上傳失敗");
-      xhr.send(formData);
+      } catch (error) {
+        console.error('Error:', error);
+        alert('上傳失敗');
+      }
     };
   
     input.click();
   };
   
-  document.body.insertAdjacentHTML('beforeend', `
-  <div style="width:80%;margin:10px auto;">
-    <div style="background:#ccc;height:20px;border-radius:10px;overflow:hidden;">
-      <div id="progressBar" style="background:#4caf50;width:0;height:100%;"></div>
-    </div>
-    <div id="progressText" style="text-align:center;margin-top:5px;">等待上傳</div>
-  </div>
-  `);
 
   return (
     <DataAreaWrapper>

@@ -14,6 +14,7 @@ export default defineConfig({
     },
   },
   build: {
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       external: ['@ffmpeg/ffmpeg'], // 告訴 Rollup 不要打包這個模組
     },
