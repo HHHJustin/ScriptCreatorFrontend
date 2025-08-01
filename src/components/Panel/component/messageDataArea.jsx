@@ -74,10 +74,9 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
         body: JSON.stringify({
           messageID: item.messageID,
           currentNodeID: currentIDInt,
-          messageIndex: item.id,
           messageType: item.rawType,
-          messageContent: item.content
-        })
+          messageContent: JSON.stringify({ fileURL: item.content.split(';')[1] }) // 改成 JSON
+        })        
       });
       if (res.ok) onRefresh && onRefresh();
       else alert('刪除失敗');
