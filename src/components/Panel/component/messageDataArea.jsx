@@ -5,9 +5,7 @@ import {
   DataAreaWrapper, Table, Th, Td, Tr, CenteredTd, EditableTextArea,
   StyledSelect, StyledButton, MediaContainer, MediaFileName
 } from '../modalStyle';
-import {
-  compressImage, compressVideo
-} from '../hook'
+import {compressImage, compressVideo} from '../hook/compress.js'
 
 const columns = [
   { key: 'id', label: '編號', align: 'center', width: '15%' },
