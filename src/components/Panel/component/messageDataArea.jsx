@@ -5,7 +5,9 @@ import {
   DataAreaWrapper, Table, Th, Td, Tr, CenteredTd, EditableTextArea,
   StyledSelect, StyledButton, MediaContainer, MediaFileName
 } from '../modalStyle';
-
+import {
+  compressImage, compressVideo
+} from '../hook'
 
 const columns = [
   { key: 'id', label: '編號', align: 'center', width: '15%' },
@@ -108,6 +110,7 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
       alert('更新失敗');
     }
   };
+
   const uploadMedia = (item) => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -117,8 +120,17 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
       const file = e.target.files?.[0];
       if (!file) return;
   
+      document.getElementById('progressText').innerText = "壓縮中...";
+      let processedFile = file;
+  
+      if (item.rawType === 'image') {
+        processedFile = await compressImage(file);
+      } else if (item.rawType === 'video') {
+        processedFile = await compressVideo(file);
+      }
+  
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', processedFile, file.name);
       formData.append('messageID', item.messageID);
       formData.append('currentNodeID', currentIDInt);
       formData.append('messageType', item.rawType);
@@ -126,17 +138,18 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
       const xhr = new XMLHttpRequest();
       xhr.open("POST", `/api/${channel}/messages/update/media`);
   
-      // **監聽進度**
+      // 上傳進度
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
           const percent = (event.loaded / event.total) * 100;
-          console.log(`上傳進度: ${percent.toFixed(2)}%`);
-          // 這裡可以更新 UI progress bar
+          document.getElementById('progressBar').style.width = percent + "%";
+          document.getElementById('progressText').innerText = `上傳中 ${percent.toFixed(1)}%`;
         }
       };
   
       xhr.onload = () => {
         if (xhr.status === 200) {
+          document.getElementById('progressText').innerText = "上傳完成，後端處理中…";
           onRefresh && onRefresh();
         } else {
           alert(`上傳失敗：\n${xhr.responseText}`);
@@ -148,7 +161,8 @@ const MessageDataArea = ({ node, message, onRefresh }) => {
     };
   
     input.click();
-  };  
+  };
+  
   document.body.insertAdjacentHTML('beforeend', `
   <div style="width:80%;margin:10px auto;">
     <div style="background:#ccc;height:20px;border-radius:10px;overflow:hidden;">
