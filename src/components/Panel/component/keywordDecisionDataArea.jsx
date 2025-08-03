@@ -1,113 +1,193 @@
-import { StyledButton, EditableTextArea } from "../modalStyle";
+import {
+  DataAreaWrapper, Table, Th, Tr, Td,
+  EditableTextArea, StyledButton, CenteredTd
+} from "../modalStyle";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import EditableTable from "./editableTable";
 
-const KeywordDecisionDataArea = ({ node, onGoNext, message, onRefresh }) => {
+const columns = [
+  { key: 'id', label: '編號', align: 'center', width: '10%' },
+  { key: 'keyword', label: '關鍵字', align: 'center', width: '50%' },
+  { key: 'action', label: '動作', align: 'center', width: '25%' },
+  { key: 'extra', label: '前往', align: 'center', width: '15%' },
+];
+
+export const KeywordDecisionDataArea = ({ node, onGoNext, message, onRefresh }) => {
   const { channel } = useParams();
   const [editingIndex, setEditingIndex] = useState(null);
   const [editedContent, setEditedContent] = useState('');
+  const [draggedIndex, setDraggedIndex] = useState(null);
   const currentIDInt = parseInt(node.id, 10);
 
-  const keywordList = message?.KeywordDecisions || [];
-  const allData = keywordList
-    .filter(item => typeof item?.Index === 'number' && item?.KeywordDecision)
-    .map(({ Index, KeywordDecision }) => ({
-      id: Index,
-      keyword: KeywordDecision.Keyword || '—',
-      keywordDecisionID: KeywordDecision.KWDecisionID,
-    }));
+  if (!message) {
+    return <div style={{ padding: '1rem' }}>Loading node data...</div>;
+  }
 
-  const handleCreate = async () => {
-    const res = await fetch(`/api/${channel}/keywordDecisions/create`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ currentNodeID: currentIDInt })
-    });
-    if (res.ok) onRefresh && onRefresh();
-    else alert('建立失敗');
+  const keywordList = message.KeywordDecisions;
+  const allData = Array.isArray(keywordList)
+    ? keywordList
+        .filter(item => typeof item?.Index === 'number' && item?.KeywordDecision)
+        .map(({ Index, KeywordDecision }) => ({
+          id: Index,
+          keyword: KeywordDecision.Keyword || '—',
+          keywordDecisionID: KeywordDecision.KWDecisionID,
+        }))
+    : [];
+
+  const handleSubmit = async () => {
+    try {
+      const res = await fetch(`/api/${channel}/keywordDecisions/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentNodeID: currentIDInt })
+      });
+      if (res.ok) {
+        onRefresh && onRefresh();
+      } else {
+        alert('建立失敗');
+      }
+    } catch (err) {
+      console.error('❌ 建立錯誤:', err);
+      alert('建立失敗');
+    }
   };
 
-  const handleDelete = async (row) => {
+  const handleDelete = async (item) => {
     if (!window.confirm('確定要刪除這筆訊息嗎？')) return;
-    const res = await fetch(`/api/${channel}/keywordDecisions/delete`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        keywordDecisionID: row.keywordDecisionID,
-        currentNodeID: currentIDInt,
-      })
-    });
-    if (res.ok) onRefresh && onRefresh();
-    else alert('刪除失敗');
+    try {
+      const res = await fetch(`/api/${channel}/keywordDecisions/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          keywordDecisionID: item.keywordDecisionID,
+          currentNodeID: currentIDInt,
+        })
+      });
+      if (res.ok) {
+        onRefresh && onRefresh();
+      } else {
+        alert('刪除失敗');
+      }
+    } catch (err) {
+      console.error('❌ 刪除錯誤:', err);
+      alert('刪除失敗');
+    }
   };
 
-  const handleUpdate = async (row) => {
+  const handleUpdateContent = async (item) => {
     setEditingIndex(null);
-    if (row.keyword === editedContent) return;
-    const res = await fetch(`/api/${channel}/keywordDecisions/update`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        keywordDecisionID: row.keywordDecisionID,
-        Keyword: editedContent,
-      })
-    });
-    if (res.ok) onRefresh && onRefresh();
-    else alert('更新失敗');
+    if (item.keyword === editedContent) return;
+    try {
+      const res = await fetch(`/api/${channel}/keywordDecisions/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          keywordDecisionID: item.keywordDecisionID,
+          Keyword: editedContent,
+        })
+      });
+      if (res.ok) {
+        onRefresh && onRefresh();
+      } else {
+        alert('更新失敗');
+      }
+    } catch (err) {
+      console.error('❌ 更新錯誤:', err);
+      alert('更新失敗');
+    }
   };
 
-  const columns = [
-    { key: 'id', label: '編號', align: 'center', width: '10%' },
-    { 
-      key: 'keyword', 
-      label: '關鍵字', 
-      align: 'center', 
-      width: '50%',
-      render: (row) =>
-        editingIndex === row.id ? (
-          <EditableTextArea
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-            onBlur={() => handleUpdate(row)}
-            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleUpdate(row))}
-          />
-        ) : (
-          <span
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
-              setEditingIndex(row.id);
-              setEditedContent(row.keyword);
-            }}
-          >
-            {row.keyword}
-          </span>
-        ),
-    },
-    { 
-      key: 'action', 
-      label: '動作', 
-      align: 'center', 
-      width: '25%',
-      render: (row) => <StyledButton onClick={() => handleDelete(row)}>刪除</StyledButton>
-    },
-    { 
-      key: 'extra', 
-      label: '前往', 
-      align: 'center', 
-      width: '15%',
-      render: (row) => <StyledButton onClick={() => onGoNext(row.id)}>▶︎</StyledButton>
-    },
-  ];
+  // ---------- 拖曳 ----------
+  const handleDragStart = (index) => setDraggedIndex(index);
+  const handleDragOver = (e) => e.preventDefault();
+  const handleDrop = async (index) => {
+    if (draggedIndex === null || draggedIndex === index) return;
 
+    // 交換位置的資訊
+    const payload = {
+      currentNodeID: currentIDInt,
+      draggedIndex: draggedIndex,  // 直接用 rowIndex
+      newIndex: index              // 直接用目標 rowIndex
+    };
+  
+    try {
+      const res = await fetch(`/api/${channel}/update-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('更新順序失敗');
+      onRefresh && onRefresh();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setDraggedIndex(null);
+    }
+  };
   return (
-    <EditableTable 
-      columns={columns}
-      data={allData}
-      onCreate={handleCreate}
-      onDelete={handleDelete}
-      addButtonText="建立"
-    />
+    <DataAreaWrapper>
+      <Table>
+        <thead>
+          <tr>
+            {columns.map((col) => (
+              <Th key={col.key} 
+                onDragStart={() => handleDragStart(rowIndex)}
+                onDragOver={handleDragOver}
+                onDrop={() => handleDrop(rowIndex)}
+                style={{ textAlign: col.align, width: col.width }}>
+                {col.label}
+              </Th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {allData.map((item) => (
+            <Tr key={item.id}>
+              <Td style={{ textAlign: 'center' }}>{item.id}</Td>
+              <Td style={{ textAlign: 'center' }}>
+                {editingIndex === item.id ? (
+                  <EditableTextArea
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    onBlur={() => handleUpdateContent(item)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleUpdateContent(item);
+                      }
+                    }}
+                  />
+                ) : (
+                  <span
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setEditingIndex(item.id);
+                      setEditedContent(item.keyword);
+                    }}
+                  >
+                    {item.keyword}
+                  </span>
+                )}
+              </Td>
+              <Td style={{ textAlign: 'center' }}>
+                <StyledButton onClick={() => handleDelete(item)}>刪除</StyledButton>
+              </Td>
+              <Td style={{ textAlign: 'center' }}>
+                <StyledButton onClick={() => onGoNext(item.id)}>▶︎</StyledButton>
+              </Td>
+            </Tr>
+          ))}
+          <Tr>
+            <CenteredTd>New</CenteredTd>
+            <CenteredTd />
+            <CenteredTd>
+              <StyledButton onClick={handleSubmit}>建立</StyledButton>
+            </CenteredTd>
+            <CenteredTd />
+          </Tr>
+        </tbody>
+      </Table>
+    </DataAreaWrapper>
   );
 };
 

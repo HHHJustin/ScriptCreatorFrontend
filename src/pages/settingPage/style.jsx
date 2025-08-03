@@ -146,6 +146,7 @@ export const Popup = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 9999;
 `;
 
 export const PopupContent = styled.div`
@@ -158,6 +159,7 @@ export const PopupContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  z-index: 10000;
 
   h3 {
     margin-top: 12px;
