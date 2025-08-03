@@ -29,6 +29,9 @@ const UploadImageTable = ({ images, channel, onRefresh }) => {
       };
 
     const handleEditClick = (image) => {
+        if (image.name && image.name.trim() !== '') {
+            return;
+        }
         setEditingImage(image);
         setImageName(image.name);
         setImageFile(null);
