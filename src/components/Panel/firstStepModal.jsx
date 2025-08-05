@@ -6,21 +6,20 @@ import { useParams } from 'react-router-dom';
 import { handleTitleChange } from './hook/panel';
 import FilterTagEditor from './component/filterTag';
 
-function FirstStepNodeModal({ node, setNodes, tags, onClose, onRefreshTags }) {
+function FirstStepNodeModal({ node, setNodes, tags, onClose, onRefreshTags, onNavigate}) {
   const { channel } = useParams();
   if (!node) return null;
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
-          <GoPreviousNode>◀︎</GoPreviousNode>
           <EditableNodeTitle 
             node={node}
             onTitleChange={handleTitleChange} 
             setNodes={setNodes}
             channel={channel}
           />
-          <GoNextNode>▶︎</GoNextNode>
+           <GoNextNode onClick={() => onNavigate && onNavigate('next')}>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>
         <FilterTagEditor

@@ -27,6 +27,7 @@ const SpecialKeywordDecisionDataArea = ({ node, onGoNext, message, onRefresh }) 
           type: SpecialKeyword?.Type || '',
           keyword: SpecialKeyword?.Keyword || '—',
           specialKeywordID: SpecialKeyword?.SpecialKeywordID,
+          nextnode: SpecialKeyword.NextNode,
       }))
   : [];
 
@@ -171,7 +172,7 @@ const handleDelete = async (item) => {
                 <StyledButton onClick={() => handleDelete(item)}>刪除</StyledButton>
               </Td>
               <Td style={{ textAlign: 'center' }}>
-                <StyledButton onClick={() => onGoNext(item.id)}>▶︎</StyledButton>
+                <StyledButton onClick={() => onGoNext(item.nextnode)}>▶︎</StyledButton>
               </Td>
             </Tr>
             ))}

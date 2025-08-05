@@ -9,7 +9,7 @@ import { handleTitleChange } from './hook/panel';
 import useNodeInfo from './hook/useNodeInfo';
 import FilterTagEditor from './component/filterTag';
 
-function MessageNodeModal({ node, tags, onClose, setNodes, onRefreshTags}) {
+function MessageNodeModal({ node, tags, onClose, setNodes, onRefreshTags, onNavigate, goToNode}) {
   const { channel } = useParams();
   const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
@@ -19,14 +19,14 @@ function MessageNodeModal({ node, tags, onClose, setNodes, onRefreshTags}) {
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
-          <GoPreviousNode>◀︎</GoPreviousNode>
+          <GoPreviousNode onClick={(e) => onNavigate && onNavigate('prev', e)}>◀︎</GoPreviousNode>
           <EditableNodeTitle 
             node={node}
             onTitleChange={handleTitleChange} 
             setNodes={setNodes}
             channel={channel}
           />
-          <GoNextNode>▶︎</GoNextNode>
+          <GoNextNode onClick={() => onNavigate && onNavigate('next')}>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>
         <FilterTagEditor
@@ -39,6 +39,7 @@ function MessageNodeModal({ node, tags, onClose, setNodes, onRefreshTags}) {
             node={node}
             message={fetchedNode}
             onRefresh={refresh}
+            onGoNext={goToNode}
           />
         </ContentWrapper>
       </ModalContent>

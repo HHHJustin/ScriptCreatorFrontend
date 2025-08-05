@@ -25,6 +25,7 @@ const columns = [
         randomID: Random?.RandomID,
         weight: Random?.Weight,
         condition: Random?.Condition || "-",
+        nextnode: Random.NextNode,
         }))
     : [];
     
@@ -170,7 +171,7 @@ const columns = [
                     <StyledButton onClick={() => handleDelete(item)}>刪除</StyledButton>
                 </Td>
                 <Td style={{ textAlign: 'center' }}>
-                    <StyledButton onClick={() => onGoNext(item.id)}>▶︎</StyledButton>
+                    <StyledButton onClick={() => onGoNext(item.nextnode)}>▶︎</StyledButton>
                  </Td>
             </Tr>
             ))}

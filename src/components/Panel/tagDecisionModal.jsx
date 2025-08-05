@@ -9,15 +9,12 @@ import { useParams } from 'react-router-dom';
 import useNodeInfo from './hook/useNodeInfo';
 import FilterTagEditor from './component/filterTag';
 
-function TagDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
-  const [newTag, setNewTag] = useState('');
+function TagDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags, onNavigate, goToNode }) {
+
   const { channel } = useParams();
   const { fetchedNode, refresh } = useNodeInfo(node, channel);
   const [fetchedTag, setFetchTag] = useState([]);
 
-  const handleAddTag = (tagText) => {
-    console.log('新增標籤：', tagText);
-  };
   const fetchTagData = async () => {
     try {
       const res = await fetch(`/api/${channel}/setting/tagNodes/fetchInfo`);
@@ -42,7 +39,7 @@ function TagDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) 
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
-          <GoPreviousNode>◀︎</GoPreviousNode>
+          <GoPreviousNode onClick={(e) => onNavigate && onNavigate('prev', e)}>◀︎</GoPreviousNode>
           <EditableNodeTitle 
             node={node}
             onTitleChange={handleTitleChange} 
@@ -61,6 +58,7 @@ function TagDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) 
             node={node} 
             messages={fetchedNode} 
             tags={fetchedTag}
+            onGoNext={goToNode}
             onRefresh={refresh} />
         </ContentWrapper>
       </ModalContent>

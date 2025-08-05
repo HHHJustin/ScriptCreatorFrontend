@@ -17,6 +17,7 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
   const [panelMenuVisible, setPanelMenuVisible] = useState(false);
   const [editNode, setEditNode] = useState(null); 
   const { screenToFlowPosition } = useReactFlow();
+  const [prevOptions, setPrevOptions] = useState(null);
   const navigate = useNavigate();
   const { channel } = useParams();
   const onRefreshGraph = useOnRefreshGraph(channel, setNodes, setEdges);
@@ -42,6 +43,47 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
   };
 
   const handleEditNode = (data, id) => setEditNode({ data, id });
+  // 共用跳轉：根據節點 ID 打開 Modal
+
+  const goToNode = (targetNodeID) => {
+    const target = nodes.find(n => parseInt(n.id) === targetNodeID);
+    if (target) {
+      setEditNode({ data: target.data, id: target.id });
+    } else {
+      alert("找不到對應節點");
+    }
+  };
+  
+  const handleNavigateModal = (direction, e) => {
+    if (!editNode) return;
+  
+    const currentNode = nodes.find(n => n.id === editNode.id);
+    if (!currentNode) return;
+  
+    let targetId = null;
+    if (direction === 'next') {
+      targetId = currentNode.data.nextnode;
+    } 
+
+    if (direction === 'prev') {
+      const targets = currentNode.data.previousnodes || [];
+      if (targets.length === 0) return;
+      setPrevOptions({
+        x: e.clientX, // 用事件座標
+        y: e.clientY,
+        options: targets
+      });
+      return; // 避免繼續執行
+    }
+  
+    if (!targetId || targetId === 0) return;
+  
+    const targetNode = nodes.find(n => parseInt(n.id) === targetId);
+    if (targetNode) {
+      setEditNode({ data: targetNode.data, id: targetNode.id });
+    }
+  };
+  
 
   const handleCloseModal = async () => {
     if (!editNode) return;
@@ -121,7 +163,40 @@ const Panel = ({ nodes, setNodes, onNodesChange, edges,
           </MenuItem>
         </ContextMenu>
       )}
-      {renderModalByType(editNode, setNodes, tagList, handleCloseModal, onRefreshTags)}
+      {renderModalByType(
+        editNode, 
+        setNodes, 
+        tagList,
+        handleCloseModal, 
+        onRefreshTags,
+        handleNavigateModal,
+        goToNode
+      )}
+      {prevOptions && (
+        <ContextMenu 
+          $x={prevOptions.x} 
+          $y={prevOptions.y} 
+          style={{ zIndex: 10001, position: 'fixed' }}
+        >
+          {prevOptions.options.map(id => {
+            const target = nodes.find(n => parseInt(n.id) === id);
+            return (
+              <MenuItem
+                key={id}
+                onClick={() => {
+                  setEditNode({ data: target.data, id: target.id });
+                  setPrevOptions(null);
+                }}
+              >
+                {target?.data?.title || `節點 ${id}`}
+              </MenuItem>
+            );
+          })}
+          <MenuItem onClick={() => setPrevOptions(null)}>取消</MenuItem>
+        </ContextMenu>
+      )}
+
+
     </div>
   );
 };

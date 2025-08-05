@@ -8,14 +8,8 @@ import { handleTitleChange } from './hook/panel';
 import useNodeInfo from './hook/useNodeInfo';
 import FilterTagEditor from './component/filterTag';
 
-function KeywordDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
-  const [newTag, setNewTag] = useState('');
+function KeywordDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags, onNavigate, goToNode }) {
   const { channel } = useParams();
-  
-  const handleAddTag = (tagText) => {
-    console.log('新增標籤：', tagText);
-  };
-
   const { fetchedNode, refresh } = useNodeInfo(node, channel);
 
   if (!node) return null;
@@ -23,7 +17,7 @@ function KeywordDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
-          <GoPreviousNode>◀︎</GoPreviousNode>
+        <GoPreviousNode onClick={(e) => onNavigate && onNavigate('prev', e)}>◀︎</GoPreviousNode>
           <EditableNodeTitle 
             node={node}
             onTitleChange={handleTitleChange} 
@@ -40,7 +34,7 @@ function KeywordDecisionNodeModal({ node, tags, onClose, setNodes, onRefreshTags
         />
           <KeywordDecisionDataArea 
             node={node} 
-            onGoNext={(id) => { console.log('你點到了 id:', id);}}
+            onGoNext={goToNode}
             message={fetchedNode} 
             onRefresh={refresh} 
           />

@@ -31,6 +31,7 @@ export const KeywordDecisionDataArea = ({ node, onGoNext, message, onRefresh }) 
           id: Index,
           keyword: KeywordDecision.Keyword || '—',
           keywordDecisionID: KeywordDecision.KWDecisionID,
+          nextnode: KeywordDecision.NextNode,
         }))
     : [];
 
@@ -124,6 +125,7 @@ export const KeywordDecisionDataArea = ({ node, onGoNext, message, onRefresh }) 
       setDraggedIndex(null);
     }
   };
+ 
   return (
     <DataAreaWrapper>
       <Table>
@@ -173,7 +175,7 @@ export const KeywordDecisionDataArea = ({ node, onGoNext, message, onRefresh }) 
                 <StyledButton onClick={() => handleDelete(item)}>刪除</StyledButton>
               </Td>
               <Td style={{ textAlign: 'center' }}>
-                <StyledButton onClick={() => onGoNext(item.id)}>▶︎</StyledButton>
+                <StyledButton onClick={() => onGoNext(item.nextnode)}>▶︎</StyledButton>
               </Td>
             </Tr>
           ))}

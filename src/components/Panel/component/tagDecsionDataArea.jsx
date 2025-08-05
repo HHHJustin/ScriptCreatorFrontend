@@ -12,7 +12,7 @@ const columns = [
   { key: 'extra', label: '前往', align: 'center', width: '15%' },
 ];
 
-const TagDecisionDataArea = ({ node, messages, tags, onRefresh }) => {
+const TagDecisionDataArea = ({ node, messages, onGoNext, tags, onRefresh }) => {
   const { channel } = useParams();
   const currentIDInt = parseInt(node.id, 10);
   const [editTagsId, setEditTagsId] = useState(null);
@@ -40,6 +40,7 @@ const TagDecisionDataArea = ({ node, messages, tags, onRefresh }) => {
             tags: matchedTagNames.length > 0 ? matchedTagNames.join(', ') : '—',
             tagList: matchedTagNames, // 這裡是 tag.name 陣列
             tagDecisionID: TagDecision.TagDecisionID,
+            nextnode: TagDecision.NextNode,
           };
         })
     : [];
@@ -166,8 +167,8 @@ const TagDecisionDataArea = ({ node, messages, tags, onRefresh }) => {
                   <StyledButton onClick={() => handleDelete(item)}>刪除</StyledButton>
                 </Td>
                 <Td style={{ textAlign: 'center' }}>
-                  <StyledButton onClick={() => console.log('前往 ID:', item.id)}>▶︎</StyledButton>
-                </Td>
+                  <StyledButton onClick={() => onGoNext(item.nextnode)}>▶︎</StyledButton>
+                 </Td>
               </Tr>
 
               {editTagsId === item.id && (

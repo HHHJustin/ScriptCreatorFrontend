@@ -9,7 +9,7 @@ import { handleTitleChange } from './hook/panel';
 import useNodeInfo from './hook/useNodeInfo';
 import FilterTagEditor from './component/filterTag';
 
-function FlexMessageNodeModal({ node, setNodes, tags, onClose, onRefreshTags }) {
+function FlexMessageNodeModal({ node, setNodes, tags, onClose, onRefreshTags, onNavigate, goToNode }) {
   const [newTag, setNewTag] = useState('');
   const [flexMessages, setFlexMessages] = useState([]);
   const { channel } = useParams();
@@ -44,14 +44,14 @@ function FlexMessageNodeModal({ node, setNodes, tags, onClose, onRefreshTags }) 
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
-          <GoPreviousNode>◀︎</GoPreviousNode>
+        <GoPreviousNode onClick={(e) => onNavigate && onNavigate('prev', e)}>◀︎</GoPreviousNode>
           <EditableNodeTitle 
             node={node}
             onTitleChange={handleTitleChange} 
             setNodes={setNodes}
             channel={channel}
           />
-          <GoNextNode>▶︎</GoNextNode>
+          <GoNextNode onClick={() => onNavigate && onNavigate('next')}>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>
         <FilterTagEditor

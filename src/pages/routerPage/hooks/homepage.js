@@ -41,6 +41,9 @@ export const fetchGraphData = async (channel, setNodes, setEdges, tags = [], nav
       data: {
         title: node.title,
         type: node.type,
+        previousnodes: node.previousnodes ?? 0,  // 後端欄位
+        nextnode: node.nextnode ?? 0,          // 後端欄位
+        filter_tags: node.filter_tags || []      // 有就用，沒有就空陣列
       },
       style: { zIndex: 1 },
     }));

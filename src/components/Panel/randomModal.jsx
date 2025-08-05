@@ -10,7 +10,7 @@ import { handleTitleChange } from './hook/panel';
 import useNodeInfo from './hook/useNodeInfo';
 import FilterTagEditor from './component/filterTag';
 
-function RandomNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
+function RandomNodeModal({ node, tags, onClose, setNodes, onRefreshTags, onNavigate, goToNode }) {
   const [newTag, setNewTag] = useState('');
   const { channel } = useParams();
   const handleAddTag = (tagText) => {
@@ -23,7 +23,7 @@ function RandomNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
-          <GoPreviousNode>◀︎</GoPreviousNode>
+          <GoPreviousNode onClick={(e) => onNavigate && onNavigate('prev', e)}>◀︎</GoPreviousNode>
           <EditableNodeTitle 
             node={node}
             onTitleChange={handleTitleChange} 
@@ -40,7 +40,7 @@ function RandomNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
         />
           <RandomDataArea 
             node={node} 
-            onGoNext={(id) => { console.log('你點到了 id:', id);}}
+            onGoNext={goToNode}
             message={fetchedNode} 
             onRefresh={refresh}/>
         </ContentWrapper>

@@ -69,7 +69,7 @@ const RichMenuTable = ({ richMenus, channel, onRefresh }) => {
     formData.append('menuID', id);
     formData.append('menuName', name);
     formData.append('richMenuJson', json);
-  
+    console.log("handleUpdateRichMenu");
     if (imageFile) {
       formData.append('file', imageFile);
     }

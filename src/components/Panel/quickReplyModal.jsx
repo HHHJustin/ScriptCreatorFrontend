@@ -8,7 +8,7 @@ import { handleTitleChange } from './hook/panel';
 import useNodeInfo from './hook/useNodeInfo';
 import FilterTagEditor from './component/filterTag';
 
-function QuickReplyNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
+function QuickReplyNodeModal({ node, tags, onClose, setNodes, onRefreshTags, onNavigate, goToNode }) {
   const { channel } = useParams();
   const [newTag, setNewTag] = useState('');
   const { fetchedNode, refresh } = useNodeInfo(node, channel);
@@ -22,14 +22,14 @@ function QuickReplyNodeModal({ node, tags, onClose, setNodes, onRefreshTags }) {
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <TopWrapper>
-          <GoPreviousNode>◀︎</GoPreviousNode>
+          <GoPreviousNode onClick={(e) => onNavigate && onNavigate('prev', e)}>◀︎</GoPreviousNode>
           <EditableNodeTitle 
             node={node}
             onTitleChange={handleTitleChange} 
             setNodes={setNodes}
             channel={channel}
           />
-          <GoNextNode>▶︎</GoNextNode>
+           <GoNextNode onClick={() => onNavigate && onNavigate('next')}>▶︎</GoNextNode>
         </TopWrapper>
         <ContentWrapper>
         <FilterTagEditor
