@@ -151,7 +151,7 @@ const RichMenuTable = ({ richMenus, channel, onRefresh }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="4">尚未圖文選單</td>
+              <td colSpan="4">尚未設定圖文選單</td>
             </tr>
           )}
           <tr>

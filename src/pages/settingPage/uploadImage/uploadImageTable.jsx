@@ -163,7 +163,7 @@ const UploadImageTable = ({ images, channel, onRefresh }) => {
                 ))
             ) : (
                 <tr>
-                <td colSpan="4">尚未圖文選單</td>
+                <td colSpan="4">尚未上傳圖片</td>
                 </tr>
             )}
             <tr>
